@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Your Reservation | Cartagena Beach Walk Resort</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body class="booking-page-bg">
+    <div class="booking-wrapper">
+        <section class="details-card">
+            <header class="form-header">
+                <h2>Complete Your Reservation</h2>
+                <p class="resort-location"><strong>Cartagena Beach Walk Resort</strong><br>📍 Brgy. Pasil, Alcoy, Cebu, Philippines</p>
+            </header>
+
+            <div class="selection-summary">
+                <p id="selected-room-display">You are booking: <span>Loading selection...</span></p>
+            </div>
+
+            <form action="https://formspree.io/f/mkokeknw" method="POST">
+                
+                <input type="hidden" name="Selected Room" id="hidden-room-input">
+
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" name="Guest Name" placeholder="Enter your full name" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <input type="email" name="_replyto" placeholder="email@example.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Phone Number</label>
+                        <input type="tel" name="Contact Number" placeholder="0912 345 6789" required>
+                    </div>
+                </div>
+
+                <div class="address-section">
+                    <label class="section-label">Home Address</label>
+                    <div class="input-group">
+                        <input type="text" name="Home Street Address" placeholder="Street / House No. / Subdivision" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="input-group">
+                            <input type="text" name="Home City" placeholder="City / Municipality" required>
+                        </div>
+                        <div class="input-group">
+                            <input type="text" name="Home Province" placeholder="Province" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-reservation">CONFIRM BOOKING</button>
+            </form>
+
+            <a href="private-rooms.html" class="back-btn">← Back to Rooms</a>
+        </section>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const room = params.get('room');
+            if(room) {
+                const cleanName = room.replace(/-/g, ' ');
+                const roomDisplay = document.querySelector('#selected-room-display span');
+                
+                roomDisplay.innerText = cleanName;
+                document.getElementById('hidden-room-input').value = cleanName;
+            }
+        });
+    </script>
+</body>
+</html>

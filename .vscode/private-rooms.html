@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accommodations | Cartagena</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<section class="rooms-page">
+    <div class="container">
+        <header class="rooms-header">
+            <h1 class="section-title">Private Accommodations</h1>
+            <p id="filter-status" class="section-subtitle">Discover our collection of meticulously maintained rooms.</p>
+        </header>
+
+        <div class="rooms-grid">
+            <div class="room-card" data-guests="5">
+                <div class="room-tag">Aircon</div>
+                <div class="room-content">
+                    <h3>Family Suite</h3>
+                    <p class="capacity">Accommodates up to 5 Guests</p>
+                    <a href="booking-details.html" class="room-btn">Book Now</a>
+                </div>
+            </div>
+
+            <div class="room-card" data-guests="2">
+                <div class="room-tag">Aircon</div>
+                <div class="room-content">
+                    <h3>Couple's Retreat</h3>
+                    <p class="capacity">Accommodates 2 Guests</p>
+                    <a href="booking-details.html" class="room-btn">Book Now</a>
+                </div>
+            </div>
+
+            <div class="room-card" data-guests="6">
+                <div class="room-tag">Aircon</div>
+                <div class="room-content">
+                    <h3>Group Deluxe</h3>
+                    <p class="capacity">Accommodates up to 6 Guests</p>
+                    <a href="booking-details.html" class="room-btn">Book Now</a>
+                </div>
+            </div>
+
+            <div class="room-card featured" data-guests="10">
+                <div class="room-tag featured-tag">Signature Villa</div>
+                <div class="room-content">
+                    <h3>Barkada Grand Villa</h3>
+                    <p class="capacity">Accommodates up to 10 Guests</p>
+                    <a href="booking-details.html" class="room-btn featured-btn">Inquire Now</a>
+                </div>
+            </div>
+
+            <div class="room-card fan-room" data-guests="2">
+                <div class="room-tag tag-muted">Electric Fan</div>
+                <div class="room-content">
+                    <h3>Budget Friendly</h3>
+                    <p class="capacity">Accommodates 2 Guests</p>
+                    <a href="booking-details.html" class="room-btn">Book Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const params = new URLSearchParams(window.location.search);
+        const selectedValue = params.get('occupancy');
+        const statusText = document.getElementById('filter-status');
+        const rooms = document.querySelectorAll('.room-card');
+
+        if (selectedValue) {
+            let count = 0;
+
+            rooms.forEach(room => {
+                const roomCapacity = parseInt(room.getAttribute('data-guests'));
+
+                let isMatch = false;
+
+                // 1. If value is "2", show rooms with 2 guests (Couple/Budget)
+                if (selectedValue === "2" && roomCapacity === 2) {
+                    isMatch = true;
+                }
+                // 2. If value is "3", show rooms with 5 guests (Family Suite)
+                else if (selectedValue === "3" && roomCapacity === 5) {
+                    isMatch = true;
+                }
+                // 3. If value is "5", show rooms with 5 guests (Family Suite)
+                else if (selectedValue === "5" && roomCapacity === 5) {
+                    isMatch = true;
+                }
+                // 4. If value is "4", show the big rooms (6 or 10 guests)
+                else if (selectedValue === "4" && (roomCapacity === 6 || roomCapacity === 10)) {
+                    isMatch = true;
+                }
+
+                // Apply the visibility
+                if (isMatch) {
+                    room.style.display = 'block';
+                    count++;
+                } else {
+                    room.style.display = 'none';
+                }
+            });
+
+            statusText.innerText = `Showing ${count} rooms for your selection.`;
+        } else {
+            rooms.forEach(room => room.style.display = 'block');
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartagena | Luxury Beach Resort</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header class="hero-header wholeview-bg">
+        <div class="container centered-content">
+            <div class="reserved-form">
+                <h2>Book Your Stay</h2>
+                <form action="#">
+                    <div class="input-group">
+                        <label for="checkin">Check-In</label>
+                        <input type="date" id="checkin" name="checkin" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="checkout">Check-Out</label>
+                        <input type="date" id="checkout" name="checkout" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="guests">Guests</label>
+                        <select id="guests" name="guests">
+                            <option value="1">1 Person</option>
+                            <option value="2" selected>2 Persons</option>
+                            <option value="3">3 Persons</option>
+                            <option value="4+">Family (4+)</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="room-type">Room Type</label>
+                        <select id="room-type" name="room-type">
+                            <option value="Cottage">Open Cottage</option>
+                            <option value="Room">Private Room</option>
+                        </select>
+                    </div>
+
+                    <a href="private-rooms.html" class="submit-reservation">CHECK AVAILABILITY</a>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <section class="room-feature">
+        <div class="container grid-2-cols">
+            <div class="room-pic-wrapper">
+                <img src="assets/room1.jpg" alt="Deluxe Room at Sandy Shores" class="room-feature-img">
+                <div class="room-badge">Featured</div>
+            </div>
+
+            <div class="room-pic-wrapper">
+                <img src="assets/room2.jpg" alt="Deluxe Room at Sandy Shores" class="room-feature-img">
+                <div class="room-badge">Featured</div>
+            </div>
+            
+            <div class="room-text">
+                <h2>The Alcoy Suite</h2>
+                <p>Experience the gold standard of tropical luxury in our signature private suites. Designed for relaxation, these rooms offer direct access to the white sandy beach.</p>
+                <p>Climate controlled and fully equipped for a seamless coastal getaway in Alcoy.</p>
+                <a href="private-rooms.html" class="inline-cta">Explore All Rooms →</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="visual-showcase">
+        <div class="container centered-content">
+            <div class="media-container">
+                <div class="image-wrapper">
+                    <img src="assets/sunview2.jpg" alt="Sunset in Cartagena" class="showcase-img">
+                    <div class="image-caption">
+                        <span class="location-tag">Cartagena, Alcoy</span>
+                        <p>Experience the serene golden hour at Sandy Shores.</p>
+                    </div>
+                     <img src="assets/seaview.jpg" alt="Sunset in Cartagena" class="showcase-img">
+                     <div class="image-caption">
+                        <span class="location-tag">Cartagena, Alcoy</span>
+                        <p>Experience the serene golden hour at Sandy Shores.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="family-showcase">
+        <div class="container centered-content">
+            <div class="media-container">
+                <div class="image-wrapper">
+                    <img src="assets/familypic.jpg" alt="Sunset in Cartagena" class="showcase-img">
+                    <div class="image-caption">
+                        <span class="location-tag">Cartagena, Alcoy</span>
+                        <p>Experience the serene golden hour and spend your family time at Sandy Shores.</p>
+                    </div>
+                    <img src="assets/family2.jpg" alt="Sunset in Cartagena" class="showcase-img">
+                     <div class="image-caption">
+                        <span class="location-tag">Cartagena, Alcoy</span>
+                        <p>Experience the serene golden hour and spend your family time at Sandy Shores.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>

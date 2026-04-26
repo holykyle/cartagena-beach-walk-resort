@@ -1,0 +1,988 @@
+/* General Layout Reset */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f8ff;
+    overflow-x: hidden; /* Prevents accidental side-scrolling */
+}
+
+/* The Hero Header Section */
+.hero-header {
+    width: 100%;
+    min-height: 100vh; /* Changed from 85vh to 100vh to fill the whole screen */
+    background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.2)), 
+                url('../assets/catagena.jpg') no-repeat center center/cover;
+    background-attachment: fixed; /* Optional: adds a cool parallax effect when scrolling */
+    display: flex;
+    align-items: center; 
+    color: white;
+    padding: 40px 0; /* Ensures some padding on mobile */
+}
+
+.hero-content-wrapper {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.text-content {
+    max-width: 650px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Consistent spacing between all items */
+}
+
+.text-content h1 {
+    font-size: 4rem;
+    margin: 0;
+    font-weight: 300;
+    line-height: 1.1;
+}
+
+.lead-text {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #e0f2ff;
+}
+
+.text-content p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    opacity: 0.9;
+}
+
+/* --- THE IMAGE FIX --- */
+.hero-img {
+    display: block;
+    width: 100%;
+    max-width: 600px; /* Sizing it slightly smaller for better focus */
+    border-radius: 20px;
+    margin: 10px 0;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+/* The 'EXPLORE MORE' Button */
+.cta-button {
+    align-self: flex-start; /* Keeps the button from stretching */
+    padding: 16px 40px;
+    background-color: #0077be;
+    color: white;
+    text-decoration: none;
+    border-radius: 50px; /* Rounded pill shape is more modern */
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 119, 190, 0.4);
+}
+
+.cta-button:hover {
+    background-color: #005f99;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 119, 190, 0.6);
+}
+
+.sub-text {
+    font-size: 0.9rem !important;
+    font-style: italic;
+    opacity: 0.7 !important;
+    margin-top: 10px;
+}
+
+/* --- VARIABLES & DEFAULTS --- */
+/* --- VARIABLES & RESET --- */
+:root {
+    --primary: #0077be;
+    --primary-dark: #005f99;
+    --accent: #ffcc00;
+    --white: #ffffff;
+    --text-main: #2d3436;
+    --text-light: #636e72;
+    --glass: rgba(255, 255, 255, 0.95);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    line-height: 1.8;
+    background-color: #f8fbff;
+    color: var(--text-main);
+    overflow-x: hidden;
+}
+
+/* --- HERO SECTION --- */
+.hero-header {
+    width: 100%;
+    /* FIX: Added ../ to find assets folder from inside the css folder */
+    background: linear-gradient(rgba(0, 40, 80, 0.6), rgba(0, 40, 80, 0.6)), 
+                url('../assets/catagena.jpg') no-repeat center center/cover;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    /* Change this from 'center' to 'flex-start' */
+    align-items: flex-start; 
+    /* Add padding to push it down just a bit from the very top */
+    padding-top: 10vh;
+}
+
+.hero-content-wrapper {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto; /* Extra insurance for centering */
+    display: grid;
+    /* This creates two equal columns; use 1fr if you want it all in one centered line */
+    grid-template-columns: 1fr 1fr; 
+    gap: 50px;
+    align-items: center;
+}
+.text-content {
+    max-width: 700px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.text-content h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: 0.9;
+    letter-spacing: -2px;
+}
+
+.hero-description {
+    font-size: 1.25rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.9);
+}
+
+/* --- MEDIA & BUTTON SIDE-BY-SIDE --- */
+.media-group {
+    display: flex;
+    align-items: flex-start; /* Aligns the image and the right stack at the top */
+    gap: 40px;
+    margin: 30px 0;
+}
+
+.cta-and-card-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Space between the button and the 5-star card */
+    align-items: flex-start; /* Keeps button and card aligned to the left of their column */
+}
+
+.hero-img {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 20px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+    transition: transform 0.5s ease;
+    flex-shrink: 0;
+}
+
+.hero-img:hover {
+    transform: scale(1.02);
+}
+
+.cta-button {
+    display: inline-block;
+    background-color: var(--accent);
+    color: #003366;
+    padding: 18px 40px;
+    text-decoration: none;
+    font-weight: 700;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 20px rgba(255, 204, 0, 0.3);
+    white-space: nowrap;
+}
+
+.cta-button:hover {
+    transform: translateY(-5px);
+    background-color: #ffd633;
+}
+
+/* --- EXPERIENCE & CARDS --- */
+.alcoy-experience-box {
+    margin-top: 20px;
+}
+
+.alcoy-experience-box h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+}
+
+.hospitality-card {
+    background: var(--glass);
+    padding: 20px;
+    border-radius: 20px;
+    text-align: center;
+    width: 100%; /* Ensures it fills the width of the stack */
+    max-width: 300px;
+    color: var(--text-main);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.hospitality-card h4 {
+    color: var(--primary);
+    margin-bottom: 5px;
+}
+
+.stars {
+    font-size: 1.5rem;
+    color: var(--accent);
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 992px) {
+    .media-group {
+        flex-direction: column;
+        align-items: center;
+    }
+    .cta-and-card-stack {
+        align-items: center;
+    }
+}
+
+/* --- RESERVATION SECTION --- */
+.resered {
+    width: 100%;
+    min-height: 100vh; /* Ensures the section takes the full height of the screen */
+    display: flex;
+    justify-content: center; /* Horizontal centering */
+    align-items: center;     /* Vertical centering */
+    background: linear-gradient(rgba(0, 40, 80, 0.6), rgba(0, 40, 80, 0.6)), 
+                url('../assets/catagena.jpg') no-repeat center center/cover;
+    padding: 20px;
+}
+
+.reserved-form {
+    width: 95%;
+    max-width: 1000px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px;
+    border-radius: 40px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    /* Remove any float or absolute positioning here */
+}
+
+.reserved-form h2 {
+    font-family: 'Montserrat', sans-serif;
+    color: var(--primary);
+    margin-bottom: 30px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.reserved-form form {
+   display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
+    justify-content: center;
+    align-items: end; /* Keeps inputs and the button level */
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-light);
+    text-transform: uppercase;
+}
+
+.input-group input, 
+.input-group select {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--text-main);
+    transition: border-color 0.3s;
+}
+
+.input-group input:focus, 
+.input-group select:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/* --- THE BUTTON --- */
+.submit-reservation {
+    /* Layout */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    grid-column: span 1; /* Fits into the reservation grid */
+    
+    /* Styling */
+    background-color: var(--primary);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none; /* Removes the underline */
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+    
+    /* Interaction */
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 119, 190, 0.3);
+}
+
+.submit-reservation:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 119, 190, 0.5);
+    color: white; /* Keeps text white on hover */
+}
+
+/* Responsive adjustment */
+@media (max-width: 600px) {
+    .reserved-form form {
+        grid-template-columns: 1fr;
+    }
+}
+/* --- ROOMS PAGE STYLES --- */
+/* --- ROOMS PAGE CORE STYLES --- */
+.rooms-page {
+    background: linear-gradient(rgba(0, 40, 80, 0.7), rgba(0, 40, 80, 0.7)), 
+                url('../assets/catagena.jpg') no-repeat center center/cover;
+    background-attachment: fixed;
+    min-height: 100vh;
+    padding: 80px 20px;
+    color: var(--white);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.rooms-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.section-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    margin-bottom: 15px;
+}
+
+.section-subtitle {
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    opacity: 0.9;
+    line-height: 1.6;
+}
+
+/* --- GRID SYSTEM --- */
+.rooms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+/* --- CARD DESIGN --- */
+.room-card {
+    background: var(--glass);
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    color: var(--text-main);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.room-card:hover {
+    transform: translateY(-10px);
+}
+
+.room-tag {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--primary);
+    color: white;
+    padding: 6px 15px;
+    border-radius: 30px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.featured-tag { background: var(--accent); color: #003366; }
+.tag-muted { background: #636e72; }
+
+.room-content {
+    padding: 40px 30px;
+}
+
+.room-content h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.8rem;
+    color: var(--primary-dark);
+    margin-bottom: 5px;
+}
+
+.capacity {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-bottom: 20px;
+}
+
+.price-box {
+    margin-bottom: 25px;
+}
+
+.currency { font-size: 1.2rem; font-weight: 600; color: var(--primary); }
+.amount { font-size: 2.2rem; font-weight: 800; color: var(--text-main); }
+.per-night { font-size: 0.9rem; color: var(--text-light); }
+
+.amenities-list {
+    list-style: none;
+    margin-bottom: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+.amenities-list li {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-bottom: 8px;
+    position: relative;
+    padding-left: 20px;
+}
+
+.amenities-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+    font-weight: bold;
+}
+
+.room-btn {
+    display: block;
+    text-align: center;
+    background: #e9ecef;
+    color: var(--text-main);
+    text-decoration: none;
+    padding: 15px;
+    border-radius: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    transition: all 0.3s;
+}
+
+.room-btn:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.featured-btn {
+    background: var(--accent);
+    color: #003366;
+}
+
+/* --- FOOTER NAV --- */
+.navigation-footer {
+    text-align: center;
+    margin-top: 60px;
+}
+
+.back-home-btn {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.back-home-btn:hover { opacity: 1; }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .section-title { font-size: 2.5rem; }
+}
+
+/* Keep the Hero Header centered on the form */
+.hero-header {
+    width: 100%;
+    min-height: 80vh; /* Reduced height since image is moved */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+/* --- UPDATED VISUAL SHOWCASE (Keep this, delete the old one) --- */
+.visual-showcase {
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    background-color: #fdfdfd; 
+}
+
+.media-container {
+    width: 100%;
+    max-width: 600px; /* This keeps the picture smaller and more professional */
+}
+
+.image-wrapper {
+    background: white;
+    padding: 12px; 
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); 
+    border: 1px solid #edf2f7;
+    transition: all 0.3s ease;
+}
+
+.image-wrapper:hover {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+    transform: translateY(-5px);
+}
+
+.showcase-img {
+    width: 100%;
+    height: 350px; 
+    object-fit: cover; /* This is key for the professional look */
+    border-radius: 10px;
+    display: block;
+}
+
+.image-caption {
+    padding: 20px 10px 10px;
+    text-align: left;
+}
+
+.location-tag {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--primary);
+    letter-spacing: 1.5px;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.image-caption p {
+    font-size: 0.95rem;
+    color: var(--text-light);
+    margin: 0;
+    font-style: italic;
+}
+/* --- VARIABLES & BASE RESET --- */
+:root {
+    --primary: #0077be;
+    --primary-dark: #005f99;
+    --accent: #ffcc00;
+    --white: #ffffff;
+    --text-main: #2d3436;
+    --text-light: #636e72;
+    --glass: rgba(255, 255, 255, 0.95);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    line-height: 1.8;
+    color: var(--text-main);
+    background-color: #fdfdfd;
+}
+
+/* --- UTILITY CLASSES --- */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 90%;
+}
+
+.centered-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.grid-2-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+/* --- SECTION 1: HERO & BOOKING --- */
+.hero-header {
+    width: 100%;
+    min-height: 100vh;
+    padding: 60px 0;
+    display: flex;
+    /* Adding wholeview1.jpg as the full-screen background */
+    background: linear-gradient(rgba(0, 40, 80, 0.5), rgba(0, 40, 80, 0.5)), 
+                url('../assets/wholeview1.jpg') no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed; /* Optional Parallax effect */
+}
+
+/* --- SECTION 2: FEATURED ROOMS --- */
+.room-feature {
+    padding: 100px 0;
+    background-color: #f8fbff;
+}
+
+.room-pic-wrapper {
+    position: relative;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+    border-radius: 20px;
+}
+
+.room-feature-img {
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.room-feature-img:hover {
+    transform: scale(1.02);
+}
+
+.room-badge {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: var(--accent);
+    color: #003366;
+    padding: 6px 15px;
+    border-radius: 30px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+}
+
+.room-text h2 {
+    font-family: 'Montserrat', sans-serif;
+    color: var(--primary-dark);
+    font-size: 2.8rem;
+    margin-bottom: 20px;
+    line-height: 1.1;
+}
+
+.room-text p {
+    color: var(--text-light);
+    margin-bottom: 20px;
+}
+
+.inline-cta {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    transition: color 0.3s;
+}
+
+.inline-cta:hover {
+    color: var(--primary-dark);
+}
+
+/* --- SECTION 3: VISUAL SHOWCASE --- */
+.visual-showcase {
+    padding: 80px 0;
+    background-color: var(--white);
+}
+
+/* ... (Keep your existing .visual-showcase styles here) ... */
+
+
+/* --- RESPONSIVE ADJUSTMENTS --- */
+@media (max-width: 992px) {
+    .grid-2-cols {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 40px;
+    }
+}
+
+/* Container to match your image_9b0a10.png */
+.details-card {
+    background: rgba(255, 255, 255, 0.85); /* White with transparency */
+    backdrop-filter: blur(10px); /* The "Glass" effect */
+    border-radius: 40px; /* Matching the large rounded corners */
+    padding: 40px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: auto;
+    text-align: center;
+}
+
+.resort-location {
+    color: #0077b6;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+    margin-top: -10px;
+}
+
+/* Matching the blue "Confirm" button to the "Check Availability" button */
+.submit-reservation {
+    background-color: #007bbd;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    box-shadow: 0 4px 15px rgba(0, 123, 189, 0.3);
+    transition: 0.3s;
+}
+
+.submit-reservation:hover {
+    background-color: #005f91;
+    transform: translateY(-2px);
+}
+
+.selection-summary {
+    background: #f0f8ff;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.selection-summary span {
+    font-weight: bold;
+    color: #007bbd;
+}
+
+.back-btn {
+    display: block;
+    margin-top: 20px;
+    text-decoration: none;
+    color: #666;
+    font-size: 0.85rem;
+}
+/* Styling for the Address Section */
+.address-section {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.address-section label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+/* Flexbox for the City and Province row */
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.form-row .input-group {
+    flex: 1;
+}
+
+/* Input Consistency with image_9b0a10.png */
+input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 12px; /* Matching the rounded style */
+    font-size: 1rem;
+    background: white;
+    margin-bottom: 10px;
+}
+
+input:focus {
+    outline: none;
+    border-color: #007bbd; /* Matching the Sandy Shores blue */
+    box-shadow: 0 0 5px rgba(0, 123, 189, 0.2);
+}
+.booking-page-bg {
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), 
+                url('../assets/catagena.jpg') no-repeat center center; /* Replace with your actual image path */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.details-card {
+    background: rgba(255, 255, 255, 0.9); /* Slightly more opaque for readability */
+    backdrop-filter: blur(15px); /* Stronger blur for that premium look */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 40px;
+    border-radius: 40px; /* Matching your image_9b0a10.png */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling for the cottage images */
+.room-image img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 20px 20px 0 0; /* Only top corners rounded */
+}
+
+.room-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    overflow: hidden; /* Ensures image doesn't bleed over corners */
+    transition: transform 0.3s ease;
+}
+
+.room-card:hover {
+    transform: translateY(-5px);
+}
+
+.room-info p {
+    font-size: 0.85rem;
+    color: #555;
+    padding: 0 15px;
+    line-height: 1.4;
+}
+
+.room-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.price-notice {
+    background: #0077b6;
+    color: white;
+    padding: 8px 25px;
+    border-radius: 50px;
+    font-weight: 600;
+    display: inline-block;
+    margin-top: 15px;
+}
+.rooms-page-bg {
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                  url('../assets/catagena.jpg') no-repeat center center; /* Ensure this path is correct */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    color: white;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.room-card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 25px;
+    overflow: hidden;
+    color: #333;
+    transition: transform 0.3s ease;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+}
+
+.room-card:hover {
+    transform: translateY(-10px);
+}
+
+.room-image img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.room-info {
+    padding: 20px;
+}
+
+.card-tag {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #0077b6;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.room-btn, .submit-reservation {
+    display: block;
+    background: #0077b6;
+    color: white;
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    margin-top: 15px;
+    transition: background 0.3s;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+}
+
+.room-btn:hover {
+    background: #023e8a;
+}
+.back-link{
+    color: wheat;
+}
