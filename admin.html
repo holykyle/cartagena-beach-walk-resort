@@ -14,7 +14,7 @@
     <div class="admin-container">
         <div id="admin-content" style="display: none;">
             <h1>Owner Dashboard</h1>
-            <p>Welcome back! You are logged in as the owner.</p>
+            <p id="welcome-msg">Welcome back!</p>
             <hr>
             <div class="dashboard-tools">
                 <p>Manage your resort bookings and room availability here.</p>
@@ -36,64 +36,48 @@
         </div>
     </div>
 
-    <script src="js/admin-script.js"></script>
-
     <script>
-const supabaseUrl = 'https://xtayczurhnjuhmtszcly.supabase.co'; 
-const supabaseKey = 'sb_publishable_1ZtSjtYn2IAsPZUL1wuDQw_lah-tbbT';
+        const supabaseUrl = 'https://xtayczurhnjuhmtszcly.supabase.co'; 
+        const supabaseKey = 'sb_publishable_1ZtSjtYn2IAsPZUL1wuDQw_lah-tbbT';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-// Initialize Supabase Client
-const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        async function signIn() {
+            const email = document.getElementById('admin-email').value;
+            const password = document.getElementById('admin-pass').value;
 
-// DOM Elements
-const adminContent = document.getElementById('admin-content');
-const loginSection = document.getElementById('login-section');
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
 
-// Function: Sign In logic
-async function signIn() {
-    const email = document.getElementById('admin-email').value;
-    const password = document.getElementById('admin-pass').value;
+            if (error) {
+                alert("Login failed: " + error.message);
+            } else {
+                checkUser(); 
+            }
+        }
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: password,
-    });
+        async function logout() {
+            await supabase.auth.signOut();
+            window.location.reload();
+        }
 
-    if (error) {
-        alert("Login failed: " + error.message);
-    } else {
-        // Success: checkUser will handle the view swap
-        checkUser(); 
-    }
-}
+        async function checkUser() {
+            const { data: { user } } = await supabase.auth.getUser();
+            const adminContent = document.getElementById('admin-content');
+            const loginSection = document.getElementById('login-section');
 
-// Function: Logout logic
-async function logout() {
-    await supabase.auth.signOut();
-    window.location.reload(); // Refresh to lock the screen
-}
+            if (user) {
+                adminContent.style.display = 'block';
+                loginSection.style.display = 'none';
+                document.getElementById('welcome-msg').innerText = `Welcome back, ${user.email}!`;
+            } else {
+                adminContent.style.display = 'none';
+                loginSection.style.display = 'block';
+            }
+        }
 
-// Function: Check if user is already logged in (Persistence)
-async function checkUser() {
-    const { data: { user } } = await supabase.auth.getUser();
-
-    if (user) {
-        adminContent.style.display = 'block';
-        loginSection.style.display = 'none';
-        document.getElementById('welcome-msg').innerText = `Welcome back, ${user.email}!`;
-    } else {
-        adminContent.style.display = 'none';
-        loginSection.style.display = 'block';
-    }
-}
-
-// Run the check as soon as the page loads
-document.addEventListener('DOMContentLoaded', checkUser);
-
-// Allow pressing "Enter" to submit
-document.getElementById('admin-pass').addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') signIn();
-});
+        document.addEventListener('DOMContentLoaded', checkUser);
     </script>
 </body>
 </html>
