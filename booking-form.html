@@ -14,10 +14,6 @@
                 <div class="reserved-form">
                     <h2>Book Your Stay</h2>
                     <form id="booking-form">
-                        <div class="input-group">
-                            <label>Full Name</label>
-                            <input type="text" id="guest-name" placeholder="Enter your name" required>
-                        </div>
 
                         <div class="input-group">
                             <label>Check-In</label>
@@ -50,50 +46,136 @@
         </div>
     </header>
 
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Your Reservation | Cartagena Beach Walk Resort</title>
+    
+    <link rel="stylesheet" href="css/style.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        /* Optional: Adding a bit of polish to the layout */
+        .booking-page-bg { background-color: #f4f7f6; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .booking-wrapper { width: 100%; max-width: 600px; }
+        .details-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
+        .input-group input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .submit-reservation { background-color: #003366; color: white; border: none; padding: 15px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 20px; transition: 0.3s; }
+        .submit-reservation:hover { background-color: #001f40; }
+        .back-btn { display: block; text-align: center; margin-top: 15px; color: #666; text-decoration: none; }
+    </style>
+</head>
+<body class="booking-page-bg">
+    <div class="booking-wrapper">
+        <section class="details-card">
+            <header class="form-header">
+                <h2>Complete Your Reservation</h2>
+                <p class="resort-location"><strong>Cartagena Beach Walk Resort</strong><br>📍 Brgy. Guiwang, Alcoy, Cebu, Philippines</p>
+            </header>
+
+            <div class="selection-summary">
+                <p id="selected-room-display">You are booking: <span style="color: #003366; font-weight: bold;">Standard Room</span></p>
+            </div>
+
+            <form id="final-booking-form">
+                
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" id="guest-name" placeholder="Enter your full name" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <input type="email" id="guest-email" placeholder="email@example.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Phone Number</label>
+                        <input type="tel" id="guest-phone" placeholder="0912 345 6789" required>
+                    </div>
+                </div>
+
+                <div class="address-section">
+                    <label class="section-label" style="font-weight: bold; display: block; margin-bottom: 10px;">Home Address</label>
+                    <div class="input-group">
+                        <input type="text" id="home-street" placeholder="Street / House No. / Subdivision" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="input-group">
+                            <input type="text" id="home-city" placeholder="City / Municipality" required>
+                        </div>
+                        <div class="input-group">
+                            <input type="text" id="home-province" placeholder="Province" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-reservation">CONFIRM BOOKING</button>
+            </form>
+
+            <a href="booking-form.html" class="back-btn">← Back to Search</a>
+        </section>
+    </div>
+
     <script>
-        // 6. INITIALIZE: These must match your Supabase project settings
+        // 1. Initialize Supabase Client with your credentials
         const supabaseUrl = 'https://xtayczurhnjuhmtszcly.supabase.co'; 
         const supabaseKey = 'sb_publishable_1ZtSjtYn2IAsPZUL1wuDQw_lah-tbbT';
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-        async function saveAndGo(type) {
-            // Get values from the IDs added above
-            const name = document.getElementById('guest-name').value;
-            const checkin = document.getElementById('check-in').value;
-            const checkout = document.getElementById('check-out').value;
-            const guests = document.getElementById('guests-select').value;
+        // 2. Global variables to store data passed from previous pages
+        let urlCheckin = "";
+        let urlCheckout = "";
+        let urlRoomType = "Standard Room";
 
-            if (!name) {
-                alert("Please enter your name to continue.");
-                return;
+        // 3. Extract parameters from the URL when the page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const roomParam = params.get('room');
+            urlCheckin = params.get('checkin');
+            urlCheckout = params.get('checkout');
+
+            if(roomParam) {
+                urlRoomType = roomParam.replace(/-/g, ' ');
+                document.querySelector('#selected-room-display span').innerText = urlRoomType;
             }
+        });
 
-            // Prepare data - ensure these match your Supabase column names!
+        // 4. Handle Form Submission to save to Database
+        document.getElementById('final-booking-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Prepare the booking object - Match your Supabase column names
             const bookingData = {
-                guest_name: name,
-                check_in: checkin,
-                check_out: checkout,
-                room_type: type === 'room' ? 'Private Room' : 'Open Cottage'
-                // Note: If your table doesn't have a 'guests_count' column, 
-                // remove the line below or add the column in Supabase
-                // guests_count: guests 
+                guest_name: document.getElementById('guest-name').value,
+                email: document.getElementById('guest-email').value,
+                room_type: urlRoomType,
+                // Fallback to today's date if URL parameters are missing
+                check_in: urlCheckin || new Date().toISOString().split('T')[0],
+                check_out: urlCheckout || new Date().toISOString().split('T')[0]
             };
 
-            // 7. INSERT: Sends data to the "bookings" table
-            const { error } = await supabaseClient
+            // 5. Insert data into the 'bookings' table
+            const { data, error } = await supabaseClient
                 .from('bookings')
                 .insert([bookingData]);
 
             if (error) {
-                console.error("Error:", error);
-                alert("Could not save booking: " + error.message);
+                console.error("Supabase error:", error.message);
+                alert("Booking could not be saved: " + error.message);
             } else {
-                alert("Booking saved to database!");
-                // Redirect based on the button clicked
-                const targetPage = type === 'room' ? 'private-rooms.html' : 'open-cottages.html';
-                window.location.href = `${targetPage}?occupancy=${guests}`;
+                alert("Reservation Confirmed! It will now appear on the Owner Dashboard.");
+                window.location.href = "index.html"; 
             }
-        }
+        });
     </script>
+</body>
+</html>
 </body>
 </html>

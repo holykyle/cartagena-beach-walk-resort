@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Complete Your Reservation | Cartagena Beach Walk Resort</title>
     <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="booking-page-bg">
     <div class="booking-wrapper">
@@ -19,37 +19,38 @@
                 <p id="selected-room-display">You are booking: <span>Cartagena Beachwalk Resort</span></p>
             </div>
 
-            <form action="https://formspree.io/f/mkokeknw" method="POST">
-                
-                <input type="hidden" name="Selected Room" id="hidden-room-input">
+            <form id="final-booking-form">
+                <input type="hidden" id="hidden-room-input">
+                <input type="hidden" id="hidden-checkin">
+                <input type="hidden" id="hidden-checkout">
 
                 <div class="input-group">
                     <label>Full Name</label>
-                    <input type="text" name="Guest Name" placeholder="Enter your full name" required>
+                    <input type="text" id="guest-name" placeholder="Enter your full name" required>
                 </div>
                 
                 <div class="form-row">
                     <div class="input-group">
                         <label>Email Address</label>
-                        <input type="email" name="_replyto" placeholder="email@example.com" required>
+                        <input type="email" id="guest-email" placeholder="email@example.com" required>
                     </div>
                     <div class="input-group">
                         <label>Phone Number</label>
-                        <input type="tel" name="Contact Number" placeholder="0912 345 6789" required>
+                        <input type="tel" id="guest-phone" placeholder="0912 345 6789" required>
                     </div>
                 </div>
 
                 <div class="address-section">
                     <label class="section-label">Home Address</label>
                     <div class="input-group">
-                        <input type="text" name="Home Street Address" placeholder="Street / House No. / Subdivision" required>
+                        <input type="text" id="home-address" placeholder="Street / House No. / Subdivision" required>
                     </div>
                     <div class="form-row">
                         <div class="input-group">
-                            <input type="text" name="Home City" placeholder="City / Municipality" required>
+                            <input type="text" id="home-city" placeholder="City / Municipality" required>
                         </div>
                         <div class="input-group">
-                            <input type="text" name="Home Province" placeholder="Province" required>
+                            <input type="text" id="home-province" placeholder="Province" required>
                         </div>
                     </div>
                 </div>
@@ -62,15 +63,53 @@
     </div>
 
     <script>
+        // 1. Initialize Supabase Client
+        const supabaseUrl = 'https://xtayczurhnjuhmtszcly.supabase.co'; 
+        const supabaseKey = 'sb_publishable_1ZtSjtYn2IAsPZUL1wuDQw_lah-tbbT';
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+        // 2. Extract Data from URL on Page Load
         window.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const room = params.get('room');
+            const checkin = params.get('checkin');
+            const checkout = params.get('checkout');
+
             if(room) {
                 const cleanName = room.replace(/-/g, ' ');
-                const roomDisplay = document.querySelector('#selected-room-display span');
-                
-                roomDisplay.innerText = cleanName;
+                document.querySelector('#selected-room-display span').innerText = cleanName;
                 document.getElementById('hidden-room-input').value = cleanName;
+            }
+            
+            // Set hidden dates if they exist in the URL
+            if(checkin) document.getElementById('hidden-checkin').value = checkin;
+            if(checkout) document.getElementById('hidden-checkout').value = checkout;
+        });
+
+        // 3. Handle Form Submission
+        document.getElementById('final-booking-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Prepare the data to match your Supabase columns
+            const bookingData = {
+                guest_name: document.getElementById('guest-name').value,
+                email: document.getElementById('guest-email').value,
+                room_type: document.getElementById('hidden-room-input').value,
+                check_in: document.getElementById('hidden-checkin').value || new Date().toISOString().split('T')[0],
+                check_out: document.getElementById('hidden-checkout').value || new Date().toISOString().split('T')[0]
+            };
+
+            // 4. Insert into Supabase 'bookings' table
+            const { data, error } = await supabaseClient
+                .from('bookings')
+                .insert([bookingData]);
+
+            if (error) {
+                console.error("Supabase Error:", error);
+                alert("Could not save booking: " + error.message);
+            } else {
+                alert("Booking Confirmed! You can now view this in your Owner Dashboard.");
+                window.location.href = "index.html"; 
             }
         });
     </script>
