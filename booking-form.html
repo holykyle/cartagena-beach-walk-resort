@@ -12,51 +12,53 @@
             <section class="text-content">
                 <div class="reserved-form">
                     <h2>Book Your Stay</h2>
-                    <form>
+                    <form id="search-form">
                         <div class="input-group">
                             <label>Check-In</label>
-                            <input type="date" value="2026-04-02">
+                            <input type="date" id="check-in" value="2026-04-02">
                         </div>
                         <div class="input-group">
                             <label>Check-Out</label>
-                            <input type="date" value="2026-04-25">
+                            <input type="date" id="check-out" value="2026-04-25">
+                        </div>
+                        <div class="input-group">
+                            <label>Accommodation Type</label>
+                            <select id="room-type-select">
+                                <option value="Private-Room">Private Room</option>
+                                <option value="Open-Cottage">Open Cottage</option>
+                            </select>
                         </div>
                         <div class="input-group">
                             <label>Guests</label>
                             <select id="guests-select">
                                 <option value="2">2 Persons</option>
-                                <option value="3">5 Persons</option>
-                                <option value="4">6 Persons</option>
-                                <option value="4">10 Persons</option>
+                                <option value="5">5 Persons</option>
+                                <option value="10">10 Persons</option>
                             </select>
                         </div>
-                        
-                        <a href="private-rooms.html?occupancy=2" id="room-btn" class="submit-reservation">AVAILABLE ROOM</a>
+                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                            <button type="button" onclick="search()" class="submit-reservation">CHECK AVAILABILITY</button>
                             <a href="index.html" class="back-btn">← Back to Home</a>
-                             <a href="open-cottages.html" id="cottage-btn" class="submit-reservation">AVAILABLE COTTAGE</a>
+                        </div>
                     </form>
                 </div>
             </section>
         </div>
     </header>
 
-   <script>
-        // Select the dropdown and both buttons
-        const guestSelect = document.getElementById('guests-select');
-        const roomBtn = document.getElementById('room-btn');
-        const cottageBtn = document.getElementById('cottage-btn');
+    <script>
+       function search() {
+    const checkin = document.getElementById('check-in').value;
+    const checkout = document.getElementById('check-out').value;
+    const guests = document.getElementById('guests-select').value;
+    const roomType = document.getElementById('room-type-select').value;
 
-        // Function to update both links at once
-        function updateLinks() {
-            const guests = guestSelect.value;
-            
-            // Updates the URL for both buttons dynamically
-            roomBtn.href = `private-rooms.html?occupancy=${guests}`;
-            cottageBtn.href = `open-cottages.html?occupancy=${guests}`;
-        }
+    // This selects whether to go to private-rooms.html or open-cottages.html
+    const targetPage = (roomType === 'Private-Room') ? 'private-rooms.html' : 'open-cottages.html';
 
-        // Listen for changes on the dropdown
-        guestSelect.addEventListener('change', updateLinks);
+    // The URL now carries every piece of info needed for the dashboard
+    window.location.href = `${targetPage}?checkin=${checkin}&checkout=${checkout}&occupancy=${guests}`;
+}
     </script>
 </body>
 </html>

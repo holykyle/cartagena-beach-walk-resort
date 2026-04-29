@@ -20,7 +20,7 @@
                 <div class="room-content">
                     <h3>Family Suite</h3>
                     <p class="capacity">Accommodates up to 5 Guests</p>
-                    <a href="booking-details.html" class="room-btn">Book Now</a>
+                    <a href="booking-details.html?room=Family-Suite" class="room-btn">Book Now</a>
                 </div>
             </div>
 
@@ -29,7 +29,7 @@
                 <div class="room-content">
                     <h3>Couple's Retreat</h3>
                     <p class="capacity">Accommodates 2 Guests</p>
-                    <a href="booking-details.html" class="room-btn">Book Now</a>
+                    <a href="booking-details.html?room=Couples-Retreat" class="room-btn">Book Now</a>
                 </div>
             </div>
 
@@ -38,7 +38,7 @@
                 <div class="room-content">
                     <h3>Group Deluxe</h3>
                     <p class="capacity">Accommodates up to 6 Guests</p>
-                    <a href="booking-details.html" class="room-btn">Book Now</a>
+                    <a href="booking-details.html?room=Group-Deluxe" class="room-btn">Book Now</a>
                 </div>
             </div>
 
@@ -47,7 +47,7 @@
                 <div class="room-content">
                     <h3>Barkada Grand Villa</h3>
                     <p class="capacity">Accommodates up to 10 Guests</p>
-                    <a href="booking-details.html" class="room-btn featured-btn">Inquire Now</a>
+                    <a href="booking-details.html?room=Barkada-Grand-Villa" class="room-btn featured-btn">Book Now</a>
                 </div>
             </div>
 
@@ -56,7 +56,7 @@
                 <div class="room-content">
                     <h3>Budget Friendly</h3>
                     <p class="capacity">Accommodates 2 Guests</p>
-                    <a href="booking-details.html" class="room-btn">Book Now</a>
+                    <a href="booking-details.html?room=Budget-Friendly" class="room-btn">Book Now</a>
                 </div>
             </div>
         </div>
@@ -64,51 +64,31 @@
 </section>
 
 <script>
-    window.addEventListener('DOMContentLoaded', () => {
-        const params = new URLSearchParams(window.location.search);
-        const selectedValue = params.get('occupancy');
-        const statusText = document.getElementById('filter-status');
-        const rooms = document.querySelectorAll('.room-card');
+   window.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const requestedGuests = parseInt(params.get('occupancy')) || 0;
+    const checkin = params.get('checkin');
+    const checkout = params.get('checkout');
 
-        if (selectedValue) {
-            let count = 0;
+    const rooms = document.querySelectorAll('.room-card');
 
-            rooms.forEach(room => {
-                const roomCapacity = parseInt(room.getAttribute('data-guests'));
+    rooms.forEach(room => {
+        // Use data-guests="number" in your HTML for each card
+        const roomCapacity = parseInt(room.getAttribute('data-guests'));
 
-                let isMatch = false;
-
-                // 1. If value is "2", show rooms with 2 guests (Couple/Budget)
-                if (selectedValue === "2" && roomCapacity === 2) {
-                    isMatch = true;
-                }
-                // 2. If value is "3", show rooms with 5 guests (Family Suite)
-                else if (selectedValue === "3" && roomCapacity === 5) {
-                    isMatch = true;
-                }
-                // 3. If value is "5", show rooms with 5 guests (Family Suite)
-                else if (selectedValue === "5" && roomCapacity === 5) {
-                    isMatch = true;
-                }
-                // 4. If value is "4", show the big rooms (6 or 10 guests)
-                else if (selectedValue === "4" && (roomCapacity === 6 || roomCapacity === 10)) {
-                    isMatch = true;
-                }
-
-                // Apply the visibility
-                if (isMatch) {
-                    room.style.display = 'block';
-                    count++;
-                } else {
-                    room.style.display = 'none';
-                }
-            });
-
-            statusText.innerText = `Showing ${count} rooms for your selection.`;
+        // Show room if it fits the requested group size or larger
+        if (roomCapacity >= requestedGuests) {
+            room.style.display = 'block';
+            
+            // Attach the info to the specific room's "Book Now" button
+            const btn = room.querySelector('.room-btn');
+            const roomName = room.querySelector('h3').innerText.replace(/\s+/g, '-');
+            btn.setAttribute('href', `booking-details.html?room=${roomName}&checkin=${checkin}&checkout=${checkout}&guests=${requestedGuests}`);
         } else {
-            rooms.forEach(room => room.style.display = 'block');
+            room.style.display = 'none';
         }
     });
+});
 </script>
 </body>
 </html>
