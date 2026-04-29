@@ -1036,3 +1036,69 @@ input:focus {
     margin-top: 10px;
     font-weight: 500;
 }
+
+.admin-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    text-align: center;
+    padding: 20px;
+    font-family: 'Arial', sans-serif; /* Matches your brand font */
+}
+
+#login-section {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    max-width: 400px;
+    width: 100%;
+}
+
+#admin-pass {
+    width: 100%;
+    padding: 12px;
+    margin: 20px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.login-btn {
+    background-color: #0077be;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 700;
+    width: 100%;
+    transition: background 0.3s;
+    text-transform: uppercase;
+}
+
+.login-btn:hover {
+    background-color: #005fa3;
+}
+
+#admin-content {
+    background: #f9f9f9;
+    padding: 40px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.logout-btn {
+    width: auto; 
+    background: #666;
+    margin-top: 20px;
+}
+
+.logout-btn:hover {
+    background: #444;
+}
