@@ -41,22 +41,46 @@
     </header>
 
    <script>
-        // Select the dropdown and both buttons
-        const guestSelect = document.getElementById('guests-select');
-        const roomBtn = document.getElementById('room-btn');
-        const cottageBtn = document.getElementById('cottage-btn');
+        const supabaseUrl = 'https://xtayczurhnjuhmtszcly.supabase.co'; 
+        const supabaseKey = 'sb_publishable_1ZtSjtYn2IAsPZUL1wuDQw_lah-tbbT';
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-        // Function to update both links at once
-        function updateLinks() {
-            const guests = guestSelect.value;
-            
-            // Updates the URL for both buttons dynamically
-            roomBtn.href = `private-rooms.html?occupancy=${guests}`;
-            cottageBtn.href = `open-cottages.html?occupancy=${guests}`;
+        // 3. Combined Function to Save to Database then Redirect
+        async function saveAndGo(type) {
+            const name = document.getElementById('guest-name').value;
+            const checkin = document.getElementById('check-in').value;
+            const checkout = document.getElementById('check-out').value;
+            const guests = document.getElementById('guests-select').value;
+
+            if (!name) {
+                alert("Please enter your name to continue.");
+                return;
+            }
+
+            // Prepare data for the 'bookings' table
+            const bookingData = {
+                guest_name: name,
+                check_in: checkin,
+                check_out: checkout,
+                room_type: type === 'room' ? 'Private Room' : 'Open Cottage',
+                guests_count: guests
+            };
+
+            // Insert into Supabase
+            const { error } = await supabaseClient
+                .from('bookings')
+                .insert([bookingData]);
+
+            if (error) {
+                console.error("Error:", error);
+                alert("Could not save booking: " + error.message);
+            } else {
+                alert("Booking saved! Redirecting to selection...");
+                // Redirect based on the button clicked
+                const targetPage = type === 'room' ? 'private-rooms.html' : 'open-cottages.html';
+                window.location.href = `${targetPage}?occupancy=${guests}`;
+            }
         }
-
-        // Listen for changes on the dropdown
-        guestSelect.addEventListener('change', updateLinks);
     </script>
 </body>
 </html>
