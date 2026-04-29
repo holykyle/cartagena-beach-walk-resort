@@ -5,9 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | Cartagena</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/admin-style.css">
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        /* Small fixes to ensure the login looks good since your admin-style.css is 404ing */
+        .admin-container { padding: 50px; text-align: center; font-family: sans-serif; }
+        input { display: block; margin: 10px auto; padding: 10px; width: 250px; border-radius: 5px; border: 1px solid #ccc; }
+        .login-btn { background: #1f2937; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+        .login-btn:hover { background: #374151; }
+    </style>
 </head>
 <body>
 
@@ -17,26 +24,24 @@
             <p id="welcome-msg">Welcome back!</p>
             <hr>
             <div class="dashboard-tools">
-                <p>Manage your resort bookings and room availability here.</p>
-                <button onclick="logout()" class="login-btn logout-btn">Logout</button>
+                <p>Manage your resort bookings here.</p>
+                <button onclick="logout()" class="login-btn">Logout</button>
             </div>
         </div>
 
         <div id="login-section">
             <h2>Owner Login</h2>
             <p>Access the Cartagena management panel.</p>
-            
             <input type="email" id="admin-email" placeholder="Owner Email">
             <input type="password" id="admin-pass" placeholder="Password">
-            
             <button class="login-btn" onclick="signIn()">Access Dashboard</button>
-            
             <br><br>
-            <a href="index.html" style="color: #666; text-decoration: none; font-size: 0.85rem;">← Back to Home</a>
+            <a href="index.html" style="color: #666; text-decoration: none;">← Back to Home</a>
         </div>
     </div>
 
     <script>
+        // Use your project details from the screenshot
         const supabaseUrl = 'https://xtayczurhnjuhmtszcly.supabase.co'; 
         const supabaseKey = 'sb_publishable_1ZtSjtYn2IAsPZUL1wuDQw_lah-tbbT';
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
@@ -44,6 +49,9 @@
         async function signIn() {
             const email = document.getElementById('admin-email').value;
             const password = document.getElementById('admin-pass').value;
+
+            // Simple check to make sure fields aren't empty
+            if(!email || !password) { alert("Please fill in both fields"); return; }
 
             const { data, error } = await supabase.auth.signInWithPassword({
                 email: email,
