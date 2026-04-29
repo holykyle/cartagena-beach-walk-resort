@@ -34,49 +34,85 @@
 
     <script>
         // Use your verified credentials from the screenshots
-        const supabaseUrl = 'https://xtayczurhnjuhmtszcly.supabase.co'; 
-        const supabaseKey = 'sb_publishable_1ZtSjtYn2IAsPZUL1wuDQw_lah-tbbT';
-        
-        // This is where the error was—ensure it is only declared ONCE here.
-        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+      const supabaseUrl = 'https://xtayczurhnjuhmtszcly.supabase.co'; 
+const supabaseKey = 'sb_publishable_1ZtSjtYn2IAsPZUL1wuDQw_lah-tbbT';
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-        async function signIn() {
-            const email = document.getElementById('admin-email').value;
-            const password = document.getElementById('admin-pass').value;
+// --- NEW: Fetch Bookings Function ---
+async function fetchBookings() {
+    const container = document.getElementById('bookings-container');
+    
+    const { data, error } = await supabaseClient
+        .from('bookings')
+        .select('*');
 
-            const { data, error } = await supabaseClient.auth.signInWithPassword({
-                email: email,
-                password: password,
-            });
+    if (error) {
+        container.innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
+        return;
+    }
 
-            if (error) {
-                alert("Login failed: " + error.message);
-            } else {
-                checkUser(); 
-            }
-        }
+    if (!data || data.length === 0) {
+        container.innerHTML = `<p>No bookings found in the database yet.</p>`;
+        return;
+    }
 
-        async function logout() {
-            await supabaseClient.auth.signOut();
-            window.location.reload();
-        }
+    let html = `
+        <table style="width:100%; border-collapse: collapse; margin-top:20px; text-align:left;">
+            <thead style="background:#f4f4f4;">
+                <tr>
+                    <th style="padding:10px; border:1px solid #ddd;">Guest Name</th>
+                    <th style="padding:10px; border:1px solid #ddd;">Check In</th>
+                    <th style="padding:10px; border:1px solid #ddd;">Check Out</th>
+                    <th style="padding:10px; border:1px solid #ddd;">Room</th>
+                </tr>
+            </thead>
+            <tbody>`;
 
-        async function checkUser() {
-            const { data: { user } } = await supabaseClient.auth.getUser();
-            const adminContent = document.getElementById('admin-content');
-            const loginSection = document.getElementById('login-section');
+    data.forEach(res => {
+        html += `
+            <tr>
+                <td style="padding:10px; border:1px solid #ddd;">${res.guest_name}</td>
+                <td style="padding:10px; border:1px solid #ddd;">${res.check_in}</td>
+                <td style="padding:10px; border:1px solid #ddd;">${res.check_out}</td>
+                <td style="padding:10px; border:1px solid #ddd;">${res.room_type}</td>
+            </tr>`;
+    });
 
-            if (user) {
-                adminContent.style.display = 'block';
-                loginSection.style.display = 'none';
-                document.getElementById('welcome-msg').innerText = `Welcome back, ${user.email}!`;
-            } else {
-                adminContent.style.display = 'none';
-                loginSection.style.display = 'block';
-            }
-        }
+    html += `</tbody></table>`;
+    container.innerHTML = html;
+}
 
-        document.addEventListener('DOMContentLoaded', checkUser);
+// Update checkUser to call the fetch function
+async function checkUser() {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    const adminContent = document.getElementById('admin-content');
+    const loginSection = document.getElementById('login-section');
+
+    if (user) {
+        adminContent.style.display = 'block';
+        loginSection.style.display = 'none';
+        document.getElementById('welcome-msg').innerText = `Logged in as: ${user.email}`;
+        fetchBookings(); // Load the data immediately
+    } else {
+        adminContent.style.display = 'none';
+        loginSection.style.display = 'block';
+    }
+}
+
+async function signIn() {
+    const email = document.getElementById('admin-email').value;
+    const password = document.getElementById('admin-pass').value;
+    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+    if (error) alert(error.message);
+    else checkUser();
+}
+
+async function logout() {
+    await supabaseClient.auth.signOut();
+    window.location.reload();
+}
+
+document.addEventListener('DOMContentLoaded', checkUser);
     </script>
 </body>
 </html>
