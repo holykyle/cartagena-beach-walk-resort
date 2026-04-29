@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cartagena | Book Your Stay</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <header class="hero-header">
@@ -12,41 +13,51 @@
             <section class="text-content">
                 <div class="reserved-form">
                     <h2>Book Your Stay</h2>
-                    <form>
+                    <form id="booking-form">
+                        <div class="input-group">
+                            <label>Full Name</label>
+                            <input type="text" id="guest-name" placeholder="Enter your name" required>
+                        </div>
+
                         <div class="input-group">
                             <label>Check-In</label>
-                            <input type="date" value="2026-04-02">
+                            <input type="date" id="check-in" value="2026-04-02">
                         </div>
+
                         <div class="input-group">
                             <label>Check-Out</label>
-                            <input type="date" value="2026-04-25">
+                            <input type="date" id="check-out" value="2026-04-25">
                         </div>
+
                         <div class="input-group">
                             <label>Guests</label>
                             <select id="guests-select">
                                 <option value="2">2 Persons</option>
-                                <option value="3">5 Persons</option>
-                                <option value="4">6 Persons</option>
-                                <option value="4">10 Persons</option>
+                                <option value="5">5 Persons</option>
+                                <option value="6">6 Persons</option>
+                                <option value="10">10 Persons</option>
                             </select>
                         </div>
                         
-                        <a href="private-rooms.html?occupancy=2" id="room-btn" class="submit-reservation">AVAILABLE ROOM</a>
+                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                            <button type="button" onclick="saveAndGo('room')" class="submit-reservation">AVAILABLE ROOM</button>
+                            <button type="button" onclick="saveAndGo('cottage')" class="submit-reservation">AVAILABLE COTTAGE</button>
                             <a href="index.html" class="back-btn">← Back to Home</a>
-                             <a href="open-cottages.html" id="cottage-btn" class="submit-reservation">AVAILABLE COTTAGE</a>
+                        </div>
                     </form>
                 </div>
             </section>
         </div>
     </header>
 
-   <script>
+    <script>
+        // 6. INITIALIZE: These must match your Supabase project settings
         const supabaseUrl = 'https://xtayczurhnjuhmtszcly.supabase.co'; 
         const supabaseKey = 'sb_publishable_1ZtSjtYn2IAsPZUL1wuDQw_lah-tbbT';
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-        // 3. Combined Function to Save to Database then Redirect
         async function saveAndGo(type) {
+            // Get values from the IDs added above
             const name = document.getElementById('guest-name').value;
             const checkin = document.getElementById('check-in').value;
             const checkout = document.getElementById('check-out').value;
@@ -57,16 +68,18 @@
                 return;
             }
 
-            // Prepare data for the 'bookings' table
+            // Prepare data - ensure these match your Supabase column names!
             const bookingData = {
                 guest_name: name,
                 check_in: checkin,
                 check_out: checkout,
-                room_type: type === 'room' ? 'Private Room' : 'Open Cottage',
-                guests_count: guests
+                room_type: type === 'room' ? 'Private Room' : 'Open Cottage'
+                // Note: If your table doesn't have a 'guests_count' column, 
+                // remove the line below or add the column in Supabase
+                // guests_count: guests 
             };
 
-            // Insert into Supabase
+            // 7. INSERT: Sends data to the "bookings" table
             const { error } = await supabaseClient
                 .from('bookings')
                 .insert([bookingData]);
@@ -75,7 +88,7 @@
                 console.error("Error:", error);
                 alert("Could not save booking: " + error.message);
             } else {
-                alert("Booking saved! Redirecting to selection...");
+                alert("Booking saved to database!");
                 // Redirect based on the button clicked
                 const targetPage = type === 'room' ? 'private-rooms.html' : 'open-cottages.html';
                 window.location.href = `${targetPage}?occupancy=${guests}`;
