@@ -4,14 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | Cartagena</title>
+    
     <link rel="stylesheet" href="css/style.css">
+    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
-        .admin-container { padding: 40px; text-align: center; font-family: 'Arial', sans-serif; }
-        .login-box { max-width: 400px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px; background: #fff; }
-        input { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; }
-        .login-btn { background-color: #007bff; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px; width: 100%; }
-        .login-btn:hover { background-color: #0056b3; }
+        .admin-container { padding: 40px; text-align: center; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .login-box { max-width: 400px; margin: auto; border: 1px solid #ddd; padding: 30px; border-radius: 12px; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; }
+        .login-btn { background-color: #003366; color: white; border: none; padding: 12px 20px; cursor: pointer; border-radius: 6px; width: 100%; font-size: 1rem; font-weight: bold; transition: background 0.3s; }
+        .login-btn:hover { background-color: #001f40; }
+        .logout-btn { background-color: #dc3545; margin-top: 30px; width: auto; padding: 10px 25px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 30px; background: white; }
+        th, td { padding: 15px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f8f9fa; color: #333; }
+        tr:nth-child(even) { background-color: #fafafa; }
+        hr { margin: 20px 0; border: 0; border-top: 1px solid #eee; }
     </style>
 </head>
 <body>
@@ -20,99 +30,136 @@
         <div id="admin-content" style="display: none;">
             <h1>Owner Dashboard</h1>
             <p id="welcome-msg">Welcome back!</p>
-            <button onclick="logout()" class="login-btn" style="background: #dc3545;">Logout</button>
+            <hr>
+            
+            <h3>Current Resort Bookings</h3>
+            <div id="bookings-container">
+                <p>Loading guest data...</p>
+            </div>
+
+            <button onclick="logout()" class="login-btn logout-btn">Logout</button>
         </div>
 
         <div id="login-section" class="login-box">
             <h2>Owner Login</h2>
+            <p style="color: #666; font-size: 0.9rem;">Access the Cartagena management panel.</p>
+            
             <input type="email" id="admin-email" placeholder="Owner Email">
             <input type="password" id="admin-pass" placeholder="Password">
+            
             <button class="login-btn" onclick="signIn()">Access Dashboard</button>
-            <p><a href="index.html" style="text-decoration:none; color:#666; font-size:14px;">← Back to Home</a></p>
+            
+            <p style="margin-top: 20px;">
+                <a href="index.html" style="text-decoration:none; color:#003366; font-size:0.85rem;">← Back to Home</a>
+            </p>
         </div>
     </div>
 
     <script>
-        // Use your verified credentials from the screenshots
-      const supabaseUrl = 'https://xtayczurhnjuhmtszcly.supabase.co'; 
-const supabaseKey = 'sb_publishable_1ZtSjtYn2IAsPZUL1wuDQw_lah-tbbT';
-const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+        // Your project credentials
+        const supabaseUrl = 'https://xtayczurhnjuhmtszcly.supabase.co'; 
+        const supabaseKey = 'sb_publishable_1ZtSjtYn2IAsPZUL1wuDQw_lah-tbbT';
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-// --- NEW: Fetch Bookings Function ---
-async function fetchBookings() {
-    const container = document.getElementById('bookings-container');
-    
-    const { data, error } = await supabaseClient
-        .from('bookings')
-        .select('*');
+        // Function: Fetch data from the "bookings" table you created
+        async function fetchBookings() {
+            const container = document.getElementById('bookings-container');
+            
+            const { data, error } = await supabaseClient
+                .from('bookings')
+                .select('*');
 
-    if (error) {
-        container.innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
-        return;
-    }
+            if (error) {
+                container.innerHTML = `<p style="color:red;">Error fetching data: ${error.message}</p>`;
+                return;
+            }
 
-    if (!data || data.length === 0) {
-        container.innerHTML = `<p>No bookings found in the database yet.</p>`;
-        return;
-    }
+            if (!data || data.length === 0) {
+                container.innerHTML = `<p>No bookings found in the database. Add one in the Supabase Table Editor!</p>`;
+                return;
+            }
 
-    let html = `
-        <table style="width:100%; border-collapse: collapse; margin-top:20px; text-align:left;">
-            <thead style="background:#f4f4f4;">
-                <tr>
-                    <th style="padding:10px; border:1px solid #ddd;">Guest Name</th>
-                    <th style="padding:10px; border:1px solid #ddd;">Check In</th>
-                    <th style="padding:10px; border:1px solid #ddd;">Check Out</th>
-                    <th style="padding:10px; border:1px solid #ddd;">Room</th>
-                </tr>
-            </thead>
-            <tbody>`;
+            // Building the table view
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Guest Name</th>
+                            <th>Check In</th>
+                            <th>Check Out</th>
+                            <th>Room Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
 
-    data.forEach(res => {
-        html += `
-            <tr>
-                <td style="padding:10px; border:1px solid #ddd;">${res.guest_name}</td>
-                <td style="padding:10px; border:1px solid #ddd;">${res.check_in}</td>
-                <td style="padding:10px; border:1px solid #ddd;">${res.check_out}</td>
-                <td style="padding:10px; border:1px solid #ddd;">${res.room_type}</td>
-            </tr>`;
-    });
+            data.forEach(booking => {
+                html += `
+                    <tr>
+                        <td>${booking.guest_name || 'N/A'}</td>
+                        <td>${booking.check_in || 'N/A'}</td>
+                        <td>${booking.check_out || 'N/A'}</td>
+                        <td>${booking.room_type || 'N/A'}</td>
+                    </tr>`;
+            });
 
-    html += `</tbody></table>`;
-    container.innerHTML = html;
-}
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+        }
 
-// Update checkUser to call the fetch function
-async function checkUser() {
-    const { data: { user } } = await supabaseClient.auth.getUser();
-    const adminContent = document.getElementById('admin-content');
-    const loginSection = document.getElementById('login-section');
+        // Function: Sign In
+        async function signIn() {
+            const email = document.getElementById('admin-email').value;
+            const password = document.getElementById('admin-pass').value;
 
-    if (user) {
-        adminContent.style.display = 'block';
-        loginSection.style.display = 'none';
-        document.getElementById('welcome-msg').innerText = `Logged in as: ${user.email}`;
-        fetchBookings(); // Load the data immediately
-    } else {
-        adminContent.style.display = 'none';
-        loginSection.style.display = 'block';
-    }
-}
+            if (!email || !password) {
+                alert("Please enter both email and password.");
+                return;
+            }
 
-async function signIn() {
-    const email = document.getElementById('admin-email').value;
-    const password = document.getElementById('admin-pass').value;
-    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-    if (error) alert(error.message);
-    else checkUser();
-}
+            const { data, error } = await supabaseClient.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
 
-async function logout() {
-    await supabaseClient.auth.signOut();
-    window.location.reload();
-}
+            if (error) {
+                alert("Login failed: " + error.message);
+            } else {
+                checkUser(); 
+            }
+        }
 
-document.addEventListener('DOMContentLoaded', checkUser);
+        // Function: Logout
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            window.location.reload();
+        }
+
+        // Function: Persistence Check
+        async function checkUser() {
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            const adminContent = document.getElementById('admin-content');
+            const loginSection = document.getElementById('login-section');
+
+            if (user) {
+                adminContent.style.display = 'block';
+                loginSection.style.display = 'none';
+                document.getElementById('welcome-msg').innerText = `Welcome back, ${user.email}!`;
+                
+                // Fetch the table data after successful login
+                fetchBookings();
+            } else {
+                adminContent.style.display = 'none';
+                loginSection.style.display = 'block';
+            }
+        }
+
+        // Run check on page load
+        document.addEventListener('DOMContentLoaded', checkUser);
+
+        // Allow Enter key to trigger login
+        document.getElementById('admin-pass').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') signIn();
+        });
     </script>
 </body>
 </html>
