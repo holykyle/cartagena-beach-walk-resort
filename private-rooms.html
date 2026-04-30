@@ -64,30 +64,61 @@
 </section>
 
 <script>
-   window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
-    const requestedGuests = parseInt(params.get('occupancy')) || 0;
-    const checkin = params.get('checkin');
-    const checkout = params.get('checkout');
+    const rawOccupancy = params.get('occupancy') || params.get('guests') || '';
+    let requestedGuests = parseInt(rawOccupancy, 10);
 
-    const rooms = document.querySelectorAll('.room-card');
+    if (Number.isNaN(requestedGuests)) {
+        const plusMatch = rawOccupancy.match(/^(\d+)\+/);
+        requestedGuests = plusMatch ? parseInt(plusMatch[1], 10) : 0;
+    }
+
+    const checkin = params.get('checkin') || '';
+    const checkout = params.get('checkout') || '';
+    const statusText = document.getElementById('filter-status');
+    const rooms = Array.from(document.querySelectorAll('.room-card'));
+
+    const exactMatches = rooms.filter(room => {
+        const roomCapacity = parseInt(room.getAttribute('data-guests'), 10) || 0;
+        return requestedGuests > 0 && roomCapacity === requestedGuests;
+    });
+
+    const filteredRooms = exactMatches.length > 0
+        ? exactMatches
+        : rooms.filter(room => {
+            const roomCapacity = parseInt(room.getAttribute('data-guests'), 10) || 0;
+            return requestedGuests === 0 || roomCapacity >= requestedGuests;
+        });
 
     rooms.forEach(room => {
-        // Use data-guests="number" in your HTML for each card
-        const roomCapacity = parseInt(room.getAttribute('data-guests'));
-
-        // Show room if it fits the requested group size or larger
-        if (roomCapacity >= requestedGuests) {
-            room.style.display = 'block';
-            
-            // Attach the info to the specific room's "Book Now" button
-            const btn = room.querySelector('.room-btn');
-            const roomName = room.querySelector('h3').innerText.replace(/\s+/g, '-');
-            btn.setAttribute('href', `booking-details.html?room=${roomName}&checkin=${checkin}&checkout=${checkout}&guests=${requestedGuests}`);
-        } else {
-            room.style.display = 'none';
-        }
+        room.style.display = filteredRooms.includes(room) ? 'block' : 'none';
     });
+
+    filteredRooms.forEach(room => {
+        const btn = room.querySelector('.room-btn');
+        if (!btn) {
+            return;
+        }
+
+        const roomName = room.querySelector('h3').innerText.replace(/\s+/g, '-');
+        let url = `booking-details.html?room=${roomName}`;
+        if (checkin) url += `&checkin=${encodeURIComponent(checkin)}`;
+        if (checkout) url += `&checkout=${encodeURIComponent(checkout)}`;
+        if (requestedGuests > 0) url += `&guests=${requestedGuests}`;
+        btn.setAttribute('href', url);
+    });
+
+    const visibleCount = filteredRooms.length;
+    if (requestedGuests > 0) {
+        statusText.innerText = visibleCount > 0
+            ? exactMatches.length > 0
+                ? `Showing ${visibleCount} room option${visibleCount === 1 ? '' : 's'} that fit exactly ${requestedGuests} guest${requestedGuests === 1 ? '' : 's'}.`
+                : `Showing ${visibleCount} room option${visibleCount === 1 ? '' : 's'} that fit ${requestedGuests} guest${requestedGuests === 1 ? '' : 's'}.`
+            : `No rooms match ${requestedGuests} guest${requestedGuests === 1 ? '' : 's'}. Please try a lower number or contact us.`;
+    } else {
+        statusText.innerText = 'Showing all available private room options.';
+    }
 });
 </script>
 </body>

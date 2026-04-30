@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Open-Air Cottages | Cartagena Beach Walk Resort</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
@@ -26,33 +26,6 @@
                         <a href="booking-details.html?room=Cottage-1" class="room-btn">BOOK NOW</a>
                     </div>
                 </div>
-
-                <div class="room-card">
-                    <div class="card-tag">OPEN-AIR</div>
-                    <div class="room-info">
-                        <h3>Sea Breeze Cottage #2</h3>
-                        <p>Enjoy the natural air and ocean view. Perfect for groups of up to 10.</p>
-                        <a href="booking-details.html?room=Cottage-2" class="room-btn">BOOK NOW</a>
-                    </div>
-                </div>
-
-                <div class="room-card">
-                    <div class="card-tag">OPEN-AIR</div>
-                    <div class="room-info">
-                        <h3>Sea Breeze Cottage #3</h3>
-                        <p>Enjoy the natural air and ocean view. Perfect for groups of up to 10.</p>
-                        <a href="booking-details.html?room=Cottage-3" class="room-btn">BOOK NOW</a>
-                    </div>
-                </div>
-
-                <div class="room-card">
-                    <div class="card-tag">OPEN-AIR</div>
-                    <div class="room-info">
-                        <h3>Sea Breeze Cottage #4</h3>
-                        <p>Enjoy the natural air and ocean view. Perfect for groups of up to 10.</p>
-                        <a href="booking-details.html?room=Cottage-4" class="room-btn">BOOK NOW</a>
-                    </div>
-                </div>
             </div>
             
             <div class="center-nav">
@@ -60,5 +33,22 @@
             </div>
         </div>
     </section>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const checkin = params.get('checkin');
+            const checkout = params.get('checkout');
+            const occupancy = params.get('occupancy');
+
+            document.querySelectorAll('.room-btn').forEach(btn => {
+                const url = new URL(btn.href, window.location.href);
+                if (checkin) url.searchParams.set('checkin', checkin);
+                if (checkout) url.searchParams.set('checkout', checkout);
+                if (occupancy) url.searchParams.set('guests', occupancy);
+                btn.href = `${url.pathname}?${url.searchParams.toString()}`;
+            });
+        });
+    </script>
 </body>
 </html>

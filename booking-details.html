@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Complete Your Reservation | Cartagena Beach Walk Resort</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -23,6 +23,7 @@
                 <input type="hidden" id="hidden-room-input">
                 <input type="hidden" id="hidden-checkin">
                 <input type="hidden" id="hidden-checkout">
+                <input type="hidden" id="hidden-guests">
 
                 <div class="input-group">
                     <label>Full Name</label>
@@ -74,16 +75,17 @@
             const room = params.get('room');
             const checkin = params.get('checkin');
             const checkout = params.get('checkout');
+            const guests = params.get('guests');
 
-            if(room) {
+            if (room) {
                 const cleanName = room.replace(/-/g, ' ');
                 document.querySelector('#selected-room-display span').innerText = cleanName;
                 document.getElementById('hidden-room-input').value = cleanName;
             }
-            
-            // Set hidden dates if they exist in the URL
-            if(checkin) document.getElementById('hidden-checkin').value = checkin;
-            if(checkout) document.getElementById('hidden-checkout').value = checkout;
+
+            if (checkin) document.getElementById('hidden-checkin').value = checkin;
+            if (checkout) document.getElementById('hidden-checkout').value = checkout;
+            if (guests) document.getElementById('hidden-guests').value = guests;
         });
 
         // 3. Handle Form Submission
@@ -91,14 +93,20 @@
     e.preventDefault();
     const params = new URLSearchParams(window.location.search);
 
+    const roomTypeValue = document.getElementById('hidden-room-input').value || params.get('room')?.replace(/-/g, ' ');
+    const guestsValue = document.getElementById('hidden-guests').value || params.get('guests');
     const bookingData = {
         guest_name: document.getElementById('guest-name').value,
         email: document.getElementById('guest-email').value,
-        room_type: params.get('room').replace(/-/g, ' '),
+        phone_number: document.getElementById('guest-phone').value,
+        home_address: document.getElementById('home-address').value,
+        city: document.getElementById('home-city').value,
+        province: document.getElementById('home-province').value,
+        room_type: roomTypeValue,
         check_in: params.get('checkin'),
         check_out: params.get('checkout'),
         // This maps to your 'guests_count' column in Supabase
-        guests_count: parseInt(params.get('guests')) || 0 
+        guests_count: parseInt(guestsValue, 10) || 0
     };
 
     const { error } = await supabaseClient.from('bookings').insert([bookingData]);

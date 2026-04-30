@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Cartagena | Book Your Stay</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -14,28 +14,32 @@
                     <h2>Book Your Stay</h2>
                     <form id="search-form">
                         <div class="input-group">
-                            <label>Check-In</label>
-                            <input type="date" id="check-in" value="2026-04-02">
+                            <label for="check-in">Check-In</label>
+                            <input type="date" id="check-in" required>
                         </div>
+
                         <div class="input-group">
-                            <label>Check-Out</label>
-                            <input type="date" id="check-out" value="2026-04-25">
+                            <label for="check-out">Check-Out</label>
+                            <input type="date" id="check-out" required>
                         </div>
+
                         <div class="input-group">
-                            <label>Accommodation Type</label>
+                            <label for="room-type-select">Accommodation Type</label>
                             <select id="room-type-select">
                                 <option value="Private-Room">Private Room</option>
                                 <option value="Open-Cottage">Open Cottage</option>
                             </select>
                         </div>
+
                         <div class="input-group">
-                            <label>Guests</label>
+                            <label for="guests-select">Party Size</label>
                             <select id="guests-select">
-                                <option value="2">2 Persons</option>
-                                <option value="5">5 Persons</option>
-                                <option value="10">10 Persons</option>
+                                <option value="2" selected>2 Guests</option>
+                                <option value="5">5 Guests</option>
+                                <option value="10">10 Guests</option>
                             </select>
                         </div>
+
                         <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
                             <button type="button" onclick="search()" class="submit-reservation">CHECK AVAILABILITY</button>
                             <a href="index.html" class="back-btn">← Back to Home</a>
@@ -47,18 +51,32 @@
     </header>
 
     <script>
-       function search() {
-    const checkin = document.getElementById('check-in').value;
-    const checkout = document.getElementById('check-out').value;
-    const guests = document.getElementById('guests-select').value;
-    const roomType = document.getElementById('room-type-select').value;
+        function search() {
+            const checkin = document.getElementById('check-in').value;
+            const checkout = document.getElementById('check-out').value;
+            const guestsValue = document.getElementById('guests-select').value;
+            const roomType = document.getElementById('room-type-select').value;
 
-    // This selects whether to go to private-rooms.html or open-cottages.html
-    const targetPage = (roomType === 'Private-Room') ? 'private-rooms.html' : 'open-cottages.html';
+            if (!checkin || !checkout) {
+                alert('Please select both check-in and check-out dates.');
+                return;
+            }
 
-    // The URL now carries every piece of info needed for the dashboard
-    window.location.href = `${targetPage}?checkin=${checkin}&checkout=${checkout}&occupancy=${guests}`;
-}
+            const occupancy = parseInt(guestsValue, 10);
+            if (Number.isNaN(occupancy) || occupancy <= 0) {
+                alert('Please select the number of guests.');
+                return;
+            }
+
+            const targetPage = roomType === 'Private-Room' ? 'private-rooms.html' : 'open-cottages.html';
+            const params = new URLSearchParams({
+                checkin,
+                checkout,
+                occupancy
+            });
+
+            window.location.href = `${targetPage}?${params.toString()}`;
+        }
     </script>
 </body>
 </html>

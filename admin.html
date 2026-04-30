@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin Dashboard | Cartagena</title>
     
     <link rel="stylesheet" href="css/style.css">
@@ -10,18 +10,45 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        .admin-container { padding: 40px; text-align: center; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .login-box { max-width: 400px; margin: auto; border: 1px solid #ddd; padding: 30px; border-radius: 12px; background: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; }
-        .login-btn { background-color: #003366; color: white; border: none; padding: 12px 20px; cursor: pointer; border-radius: 6px; width: 100%; font-size: 1rem; font-weight: bold; transition: background 0.3s; }
-        .login-btn:hover { background-color: #001f40; }
+        .admin-container { padding: 40px; text-align: center; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 1180px; margin: 0 auto; }
+        .login-box { max-width: 420px; margin: auto; border: 1px solid #d7dde8; padding: 30px; border-radius: 18px; background: #ffffff; box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08); }
+        input { width: 100%; padding: 14px 16px; margin: 10px 0; border: 1px solid #d8e1ee; border-radius: 12px; font-size: 1rem; }
+        .login-btn { background-color: #003366; color: white; border: none; padding: 14px 20px; cursor: pointer; border-radius: 12px; width: 100%; font-size: 1rem; font-weight: 700; transition: background 0.25s ease; }
+        .login-btn:hover { background-color: #002952; }
         .logout-btn { background-color: #dc3545; margin-top: 30px; width: auto; padding: 10px 25px; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 30px; background: white; }
-        th, td { padding: 15px; border: 1px solid #ddd; text-align: left; }
-        th { background-color: #f8f9fa; color: #333; }
-        tr:nth-child(even) { background-color: #fafafa; }
-        hr { margin: 20px 0; border: 0; border-top: 1px solid #eee; }
+        .availability-section { margin-top: 32px; text-align: left; }
+        .availability-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 16px; }
+        .availability-summary p { margin: 0; padding: 14px 18px; border-radius: 16px; background: #f7f9fc; color: #25334a; font-size: 0.98rem; font-weight: 600; }
+        .availability-grid { display: grid; gap: 22px; margin-top: 18px; }
+        .availability-grid-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+        .cottage-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-top: 18px; }
+        .cottage-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 18px; }
+        .room-category-group { width: 100%; padding: 20px; border-radius: 24px; background: rgba(243, 249, 255, 0.9); border: 1px solid #d7e4f6; }
+        .room-category-title { margin: 0 0 16px; font-size: 1.05rem; color: #0f305a; font-weight: 700; letter-spacing: 0.01em; }
+        .room-category-title { margin: 0 0 16px; font-size: 1.05rem; color: #0f305a; font-weight: 700; letter-spacing: 0.01em; }
+        .room-status-card { width: 100%; max-width: 360px; border-radius: 22px; background: #ffffff; border: 1px solid #e4ebf4; padding: 18px; box-shadow: 0 16px 30px rgba(15, 23, 42, 0.06); display: grid; gap: 16px; min-height: 160px; }
+        .room-status-card h4 { margin: 0; font-size: 1.15rem; color: #112233; }
+        .room-meta { margin: 8px 0 0; font-size: 0.95rem; color: #475a74; }
+        .room-card-footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+        .room-card-footer .status-pill { margin-top: 8px; }
+        .room-details { margin-top: 12px; font-size: 0.96rem; color: #4d5d74; line-height: 1.5; }
+        .room-details div { margin-top: 6px; }
+        .status-pill { display: inline-flex; align-items: center; justify-content: center; padding: 8px 14px; border-radius: 999px; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+        .status-pill.available { background: #e7f1ff; color: #004a8e; border: 1px solid #bfd5ff; }
+        .status-pill.unavailable { background: #ffe9ea; color: #a12525; border: 1px solid #f5c4c6; }
+        .toggle-room-btn { width: auto; min-width: 200px; border: none; border-radius: 14px; padding: 12px 18px; font-weight: 700; color: #ffffff; background: #0077be; cursor: pointer; transition: background 0.25s ease, transform 0.25s ease; }
+        .toggle-room-btn:hover { background: #005f99; transform: translateY(-1px); }
+        .info-note { margin: 14px 0 0; color: #445566; font-size: 0.95rem; }
+        .bookings-table { width: 100%; border-collapse: collapse; margin-top: 22px; background: #ffffff; }
+        .bookings-table th, .bookings-table td { padding: 14px 16px; border: 1px solid #e3eaf2; text-align: left; }
+        .bookings-table th { background: #f3f6fb; color: #1c2b3f; }
+        .bookings-table tr:nth-child(even) { background: #fbfcff; }
+        hr { margin: 26px 0; border: 0; border-top: 1px solid #e6ebf4; }
+        @media (max-width: 768px) {
+            .admin-container { padding: 24px; }
+            .login-box { padding: 24px; }
+            .room-status-card { min-height: auto; }
+        }
     </style>
 </head>
 <body>
@@ -31,7 +58,24 @@
             <h1>Owner Dashboard</h1>
             <p id="welcome-msg">Welcome back!</p>
             <hr>
-            
+
+            <section class="availability-section">
+                <h3>Private Room Availability</h3>
+                <div id="availability-summary" class="availability-summary">
+                    <p>Loading room availability...</p>
+                </div>
+                <div id="availability-grid" class="availability-grid"></div>
+            </section>
+
+            <section class="availability-section">
+                <h3>Open-Air Cottage Status</h3>
+                <div id="cottage-status" class="availability-summary">
+                    <p>Loading cottage availability...</p>
+                </div>
+            </section>
+
+            <hr>
+
             <h3>Current Resort Bookings</h3>
             <div id="bookings-container">
                 <p>Loading guest data...</p>
@@ -61,10 +105,278 @@
         const supabaseKey = 'sb_publishable_1ZtSjtYn2IAsPZUL1wuDQw_lah-tbbT';
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-        // Function: Fetch data from the "bookings" table you created
+        const roomGroups = [
+            { label: '2 Rooms — ₱2,000 good for 5 person - aircon', ids: [1, 2], price: '2k', capacity: '5', feature: 'Aircon' },
+            { label: '2 Rooms — ₱1,500 good for 2 person - aircon', ids: [3, 4], price: '1.5k', capacity: '2', feature: 'Aircon' },
+            { label: '3 Rooms — ₱3,000 good for 6 person - aircon', ids: [5, 6, 7], price: '3k', capacity: '6', feature: 'Aircon' },
+            { label: '3 Rooms — ₱4,000 good for 10 person - aircon', ids: [8, 9, 10], price: '4k', capacity: '10', feature: 'Aircon' },
+            { label: '2 Rooms — ₱1,200 good for 2 person - electric fan', ids: [11, 12], price: '1.2k', capacity: '2', feature: 'Electric fan' }
+        ];
+        const totalPrivateRooms = roomGroups.reduce((sum, group) => sum + group.ids.length, 0);
+        const privateRooms = roomGroups.flatMap(group =>
+            group.ids.map(id => ({
+                id,
+                name: `Private Room ${id}`,
+                category: group.label,
+                price: group.price,
+                capacity: group.capacity,
+                feature: group.feature
+            }))
+        );
+        const cottageRooms = Array.from({ length: 5 }, (_, index) => ({
+            id: index + 1,
+            name: `Cottage ${index + 1}`
+        }));
+        let currentBookedRoomMap = new Map();
+        let currentCottageBookingMap = new Map();
+
+        function getSavedRoomStatus() {
+            try {
+                return JSON.parse(localStorage.getItem('adminRoomStatus') || '{}');
+            } catch {
+                return {};
+            }
+        }
+
+        function saveRoomStatus(status) {
+            localStorage.setItem('adminRoomStatus', JSON.stringify(status));
+        }
+
+        function getSavedCottageStatus() {
+            try {
+                return JSON.parse(localStorage.getItem('adminCottageStatus') || '{}');
+            } catch {
+                return {};
+            }
+        }
+
+        function saveCottageStatus(value) {
+            localStorage.setItem('adminCottageStatus', JSON.stringify(value));
+        }
+
+        function getBookingGuestName(booking) {
+            return booking.guest_name || booking.full_name || booking.name || booking.guest || 'Guest';
+        }
+
+        function getBookedPrivateRoomMap(bookings) {
+            const bookedMap = new Map();
+            const cottageBookingMap = new Map();
+            const genericBookings = [];
+
+            bookings.forEach(booking => {
+                const type = (booking.room_type || '').toLowerCase();
+                const cottageMatch = booking.room_type?.match(/cottage[-\s]*(\d+)/i);
+                if (/cottage|open-air|open cottage|open air/i.test(type)) {
+                    if (cottageMatch) {
+                        const id = Number(cottageMatch[1]);
+                        if (id >= 1 && id <= cottageRooms.length) {
+                            cottageBookingMap.set(id, booking);
+                            return;
+                        }
+                    }
+                    return;
+                }
+
+                const explicitMatch = booking.room_type?.match(/Private Room\s*(\d+)/i);
+                if (explicitMatch) {
+                    const id = Number(explicitMatch[1]);
+                    if (id >= 1 && id <= totalPrivateRooms) {
+                        bookedMap.set(id, booking);
+                        return;
+                    }
+                }
+
+                genericBookings.push(booking);
+            });
+
+            let nextRoom = 1;
+            genericBookings.forEach(booking => {
+                while (bookedMap.has(nextRoom) && nextRoom <= totalPrivateRooms) {
+                    nextRoom += 1;
+                }
+                if (nextRoom <= totalPrivateRooms) {
+                    bookedMap.set(nextRoom, booking);
+                }
+            });
+
+            return { bookedMap, cottageBookingMap };
+        }
+
+        function loadRoomAvailability(bookedMap = new Map()) {
+            const savedStatus = getSavedRoomStatus();
+            return privateRooms.map(room => {
+                const overrideValue = savedStatus[room.id];
+                const booking = bookedMap.get(room.id);
+                const isBooked = Boolean(booking);
+                const available = overrideValue === true
+                    ? true
+                    : overrideValue === false
+                        ? false
+                        : !isBooked;
+
+                return {
+                    ...room,
+                    available,
+                    booking,
+                    manuallyReleased: overrideValue === true && isBooked,
+                    manuallyBlocked: overrideValue === false && !isBooked
+                };
+            });
+        }
+
+        function renderCottageStatus(cottageBookingMap = new Map()) {
+            const cottageContainer = document.getElementById('cottage-status');
+            const savedStatus = getSavedCottageStatus();
+            const availability = cottageRooms.map(cottage => {
+                const overrideValue = savedStatus[cottage.id];
+                const booking = cottageBookingMap.get(cottage.id);
+                const isBooked = Boolean(booking);
+                const available = overrideValue === true
+                    ? true
+                    : overrideValue === false
+                        ? false
+                        : !isBooked;
+
+                return {
+                    ...cottage,
+                    available,
+                    booking,
+                    manuallyReleased: overrideValue === true && isBooked,
+                    manuallyBlocked: overrideValue === false && !isBooked
+                };
+            });
+
+            const availableCount = availability.filter(room => room.available).length;
+            const unavailableCount = cottageRooms.length - availableCount;
+
+            cottageContainer.innerHTML = `
+                <div class="room-category-group">
+                    <h3 class="room-category-title">Open-Air Cottages</h3>
+                    <div class="availability-summary cottage-summary">
+                        <p><strong>${availableCount}</strong> available</p>
+                        <p><strong>${unavailableCount}</strong> booked</p>
+                        <p>Total cottages: <strong>${cottageRooms.length}</strong></p>
+                    </div>
+                    <div class="availability-grid-group cottage-grid">
+                        ${availability.map(room => {
+                        const statusLabel = room.available ? 'Available' : 'Booked';
+                        const statusClass = room.available ? 'available' : 'unavailable';
+                        const subLabel = room.manuallyReleased ? ' (Released)' : room.manuallyBlocked ? ' (Manual Block)' : '';
+                        const bookingDetails = room.booking ? `
+                                <div class="room-details">
+                                    <div style="font-weight: 700; color: #112233; margin-bottom: 8px;">${room.booking.room_type || 'Open-Air Cottage'}</div>
+                                    <div><strong>Guest:</strong> ${getBookingGuestName(room.booking)}</div>
+                                    <div><strong>Email:</strong> ${room.booking.email || room.booking.contact_email || 'No email'}</div>
+                                    <div><strong>Phone:</strong> ${room.booking.phone_number || room.booking.phone || 'No phone'}</div>
+                                    <div><strong>Check-in:</strong> ${room.booking.check_in || 'N/A'}</div>
+                                    <div><strong>Check-out:</strong> ${room.booking.check_out || 'N/A'}</div>
+                                </div>` : `
+                                <div class="room-details">
+                                    <div style="font-weight: 700; color: #112233; margin-bottom: 8px;">No current booking</div>
+                                </div>`;
+
+                        return `
+                            <div class="room-status-card">
+                                <div>
+                                    <h4>${room.name}</h4>
+                                    <p class="room-meta">Open-Air Cottage · ₱500 / day · up to 10 pax</p>
+                                    <div class="room-card-footer">
+                                        <span class="status-pill ${statusClass}">${statusLabel}${subLabel}</span>
+                                    </div>
+                                    ${bookingDetails}
+                                </div>
+                                <button class="toggle-room-btn" onclick="${room.booking ? `deleteBooking(${room.booking.id || room.booking.booking_id})` : `toggleCottageStatus(${room.id})`}">
+                                    ${room.booking ? 'Unbook' : room.available ? 'Mark Booked' : 'Mark Available'}
+                                </button>
+                            </div>
+                        `;
+                    }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleCottageStatus(cottageId) {
+            const status = getSavedCottageStatus();
+            const currentValue = status[cottageId];
+            status[cottageId] = currentValue === false ? true : false;
+            saveCottageStatus(status);
+            renderCottageStatus(currentCottageBookingMap);
+        }
+
+        function renderAvailability(bookedMap = new Map()) {
+            const availability = loadRoomAvailability(bookedMap);
+            const availableCount = availability.filter(room => room.available).length;
+            const unavailableCount = totalPrivateRooms - availableCount;
+
+            document.getElementById('availability-summary').innerHTML = `
+                <p><strong>${availableCount}</strong> available</p>
+                <p><strong>${unavailableCount}</strong> unavailable</p>
+                <p>Total private rooms: <strong>${totalPrivateRooms}</strong></p>
+            `;
+
+            const groupedRooms = availability.reduce((acc, room) => {
+                if (!acc[room.category]) {
+                    acc[room.category] = [];
+                }
+                acc[room.category].push(room);
+                return acc;
+            }, {});
+
+            const grid = document.getElementById('availability-grid');
+            grid.innerHTML = Object.entries(groupedRooms).map(([category, rooms]) => {
+                const cards = rooms.map(room => {
+                    const statusLabel = room.available ? 'Available' : 'Booked';
+                    const statusClass = room.available ? 'available' : 'unavailable';
+                    const subLabel = room.manuallyReleased ? ' (Released)' : room.manuallyBlocked ? ' (Manual Block)' : '';
+                    const bookingDetails = room.booking ? `
+                            <div class="room-details">
+                                <div style="font-weight: 700; color: #112233;">${room.booking.room_type || 'Booked room'}</div>
+                                <div><strong>Guest:</strong> ${getBookingGuestName(room.booking)}</div>
+                                <div><strong>Email:</strong> ${room.booking.email || room.booking.contact_email || 'No email'}</div>
+                                <div><strong>Phone:</strong> ${room.booking.phone_number || room.booking.phone || 'No phone'}</div>
+                                <div><strong>Check-in:</strong> ${room.booking.check_in || 'N/A'}</div>
+                                <div><strong>Check-out:</strong> ${room.booking.check_out || 'N/A'}</div>
+                            </div>` : '';
+
+                    return `
+                        <div class="room-status-card">
+                            <div>
+                                <h4>${room.name}</h4>
+                                <p class="room-meta">₱${room.price} · ${room.capacity} pax · ${room.feature}</p>
+                                <div class="room-card-footer">
+                                    <span class="status-pill ${statusClass}">${statusLabel}${subLabel}</span>
+                                    <button class="toggle-room-btn" onclick="${room.booking ? `deleteBooking(${room.booking.id})` : `toggleRoomStatus(${room.id})`}">
+                                        ${room.booking ? 'Unbook' : room.available ? 'Mark Booked' : 'Mark Available'}
+                                    </button>
+                                </div>
+                                ${bookingDetails}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                return `
+                    <div class="room-category-group">
+                        <h3 class="room-category-title">${category}</h3>
+                        <div class="availability-grid-group">
+                            ${cards}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleRoomStatus(roomId) {
+            const status = getSavedRoomStatus();
+            const currentValue = status[roomId];
+            status[roomId] = currentValue === false ? true : false;
+            saveRoomStatus(status);
+            renderAvailability(currentBookedRoomMap);
+        }
+
         async function fetchBookings() {
             const container = document.getElementById('bookings-container');
-            
             const { data, error } = await supabaseClient
                 .from('bookings')
                 .select('*');
@@ -76,65 +388,152 @@
 
             if (!data || data.length === 0) {
                 container.innerHTML = `<p>No bookings found in the database. Add one in the Supabase Table Editor!</p>`;
+                currentBookedRoomMap = new Map();
+                currentCottageBookingMap = new Map();
+                renderCottageStatus(currentCottageBookingMap);
+                renderAvailability(currentBookedRoomMap);
                 return;
             }
 
-            // Building the table view
+            const { bookedMap, cottageBookingMap } = getBookedPrivateRoomMap(data);
+            currentBookedRoomMap = bookedMap;
+            currentCottageBookingMap = cottageBookingMap;
+
+            renderCottageStatus(cottageBookingMap);
+
             let html = `
-                <table>
+                <table class="bookings-table">
                     <thead>
                         <tr>
                             <th>Guest Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Address</th>
                             <th>Check In</th>
                             <th>Check Out</th>
                             <th>Room Type</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>`;
 
             data.forEach(booking => {
+                const roomLabel = booking.room_type || 'N/A';
+
+                const bookingAddress = [booking.home_address, booking.city, booking.province]
+                    .filter(Boolean)
+                    .join(', ');
+
                 html += `
                     <tr>
                         <td>${booking.guest_name || 'N/A'}</td>
+                        <td>${booking.email || booking.contact_email || 'N/A'}</td>
+                        <td>${booking.phone_number || booking.phone || 'N/A'}</td>
+                        <td>${bookingAddress || 'N/A'}</td>
                         <td>${booking.check_in || 'N/A'}</td>
                         <td>${booking.check_out || 'N/A'}</td>
-                        <td>${booking.room_type || 'N/A'}</td>
+                        <td>${roomLabel}</td>
+                        <td><button class="toggle-room-btn" onclick="deleteBooking(${booking.id || booking.booking_id})">Unbook</button></td>
                     </tr>`;
             });
 
             html += `</tbody></table>`;
             container.innerHTML = html;
+            renderAvailability(currentBookedRoomMap);
+
+            if (currentBookedRoomMap.size > 0) {
+                const note = document.createElement('p');
+                note.className = 'info-note';
+                note.innerText = `Booked private rooms: ${[...currentBookedRoomMap.keys()].sort().join(', ')}.`;
+                container.appendChild(note);
+            }
         }
 
-        // Function: Sign In
+        function parseBookingType(roomType = '') {
+            const type = String(roomType).trim();
+            const cottageMatch = type.match(/cottage[-\s]*(\d+)/i);
+            if (cottageMatch) {
+                return { kind: 'cottage', id: Number(cottageMatch[1]) };
+            }
+            const roomMatch = type.match(/private room\s*(\d+)/i);
+            if (roomMatch) {
+                return { kind: 'room', id: Number(roomMatch[1]) };
+            }
+            return null;
+        }
+
+        function clearManualOverrideForRoomType(roomType) {
+            const parsed = parseBookingType(roomType);
+            if (!parsed) {
+                return;
+            }
+
+            if (parsed.kind === 'cottage') {
+                const status = getSavedCottageStatus();
+                if (status.hasOwnProperty(parsed.id)) {
+                    delete status[parsed.id];
+                    saveCottageStatus(status);
+                }
+            }
+
+            if (parsed.kind === 'room') {
+                const status = getSavedRoomStatus();
+                if (status.hasOwnProperty(parsed.id)) {
+                    delete status[parsed.id];
+                    saveRoomStatus(status);
+                }
+            }
+        }
+
+        async function deleteBooking(bookingId) {
+    if (!confirm('Are you sure you want to unbook this reservation? This will remove it from the database.')) {
+        return;
+    }
+
+    if (!bookingId) {
+        alert('Unable to unbook: booking ID is missing.');
+        return;
+    }
+
+    const { error } = await supabaseClient
+        .from('bookings')
+        .delete()
+        .eq('id', bookingId);
+
+    if (error) {
+        alert('Failed to unbook: ' + error.message);
+        return;
+    }
+
+    await fetchBookings();
+}
+
         async function signIn() {
             const email = document.getElementById('admin-email').value;
             const password = document.getElementById('admin-pass').value;
 
             if (!email || !password) {
-                alert("Please enter both email and password.");
+                alert('Please enter both email and password.');
                 return;
             }
 
-            const { data, error } = await supabaseClient.auth.signInWithPassword({
-                email: email,
-                password: password,
+            const { error } = await supabaseClient.auth.signInWithPassword({
+                email,
+                password,
             });
 
             if (error) {
-                alert("Login failed: " + error.message);
+                alert('Login failed: ' + error.message);
             } else {
-                checkUser(); 
+                checkUser();
             }
         }
 
-        // Function: Logout
         async function logout() {
             await supabaseClient.auth.signOut();
             window.location.reload();
         }
 
-        // Function: Persistence Check
         async function checkUser() {
             const { data: { user } } = await supabaseClient.auth.getUser();
             const adminContent = document.getElementById('admin-content');
@@ -144,8 +543,8 @@
                 adminContent.style.display = 'block';
                 loginSection.style.display = 'none';
                 document.getElementById('welcome-msg').innerText = `Welcome back, ${user.email}!`;
-                
-                // Fetch the table data after successful login
+                renderAvailability();
+                renderCottageStatus(currentCottageBookingMap);
                 fetchBookings();
             } else {
                 adminContent.style.display = 'none';
@@ -153,13 +552,14 @@
             }
         }
 
-        // Run check on page load
         document.addEventListener('DOMContentLoaded', checkUser);
-
-        // Allow Enter key to trigger login
         document.getElementById('admin-pass').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') signIn();
         });
+
+        window.toggleRoomStatus = toggleRoomStatus;
+        window.toggleCottageStatus = toggleCottageStatus;
+        window.deleteBooking = deleteBooking;
     </script>
 </body>
 </html>

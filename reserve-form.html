@@ -25,12 +25,11 @@
                     </div>
 
                     <div class="input-group">
-                        <label for="guests">Guests</label>
+                        <label for="guests">Party Size</label>
                         <select id="guests" name="guests">
-                            <option value="1">1 Person</option>
-                            <option value="2" selected>2 Persons</option>
-                            <option value="3">3 Persons</option>
-                            <option value="4+">Family (4+)</option>
+                            <option value="2" selected>2 Guests</option>
+                            <option value="5">5 Guests</option>
+                            <option value="10">10 Guests</option>
                         </select>
                     </div>
 
@@ -42,7 +41,7 @@
                         </select>
                     </div>
 
-                    <a href="private-rooms.html" class="submit-reservation">CHECK AVAILABILITY</a>
+                    <button type="button" id="reserve-search" class="submit-reservation">CHECK AVAILABILITY</button>
                 </form>
             </div>
         </div>
@@ -106,6 +105,35 @@
             </div>
         </div>
     </section>
+
+    <script>
+        document.getElementById('reserve-search').addEventListener('click', () => {
+            const checkin = document.getElementById('checkin').value;
+            const checkout = document.getElementById('checkout').value;
+            const guestsValue = document.getElementById('guests').value;
+            const roomType = document.getElementById('room-type').value;
+
+            if (!checkin || !checkout) {
+                alert('Please select both check-in and check-out dates.');
+                return;
+            }
+
+            const occupancy = parseInt(guestsValue, 10);
+            if (Number.isNaN(occupancy) || occupancy <= 0) {
+                alert('Please select the number of guests.');
+                return;
+            }
+
+            const targetPage = roomType === 'Room' ? 'private-rooms.html' : 'open-cottages.html';
+            const params = new URLSearchParams({
+                checkin,
+                checkout,
+                occupancy
+            });
+
+            window.location.href = `${targetPage}?${params.toString()}`;
+        });
+    </script>
 
 </body>
 </html>
