@@ -553,6 +553,30 @@
         }
 
         document.addEventListener('DOMContentLoaded', checkUser);
+        // REALTIME BOOKING LISTENER
+            supabaseClient
+            .channel('realtime-bookings')
+                .on(
+                'postgres_changes',
+            {
+                event: '*',
+                schema: 'public',
+                    table: 'bookings'
+                },
+                (payload) => {
+                console.log('Realtime change detected:', payload);
+
+                // REFRESH BOOKINGS AUTOMATICALLY
+                fetchBookings();
+
+                 // OPTIONAL SOUND
+                    const audio = new Audio(
+                     'https://actions.google.com/sounds/v1/notifications/notification_simple-02.mp3'
+                     );
+                        audio.play();
+                    }
+                )
+            .subscribe();
         document.getElementById('admin-pass').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') signIn();
         });
