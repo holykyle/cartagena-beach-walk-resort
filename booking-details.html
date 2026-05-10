@@ -89,12 +89,73 @@
         });
 
         // 3. Handle Form Submission
-       document.getElementById('final-booking-form').addEventListener('submit', async (e) => {
+    document.getElementById('final-booking-form').addEventListener('submit', async (e) => {
     e.preventDefault();
+
     const params = new URLSearchParams(window.location.search);
 
-    const roomTypeValue = document.getElementById('hidden-room-input').value || params.get('room')?.replace(/-/g, ' ');
-    const guestsValue = document.getElementById('hidden-guests').value || params.get('guests');
+    const roomTypeValue =
+        document.getElementById('hidden-room-input').value ||
+        params.get('room')?.replace(/-/g, ' ');
+
+    const guestsValue =
+        document.getElementById('hidden-guests').value ||
+        params.get('guests');
+
+    const checkInDate = params.get('checkin');
+    const checkOutDate = params.get('checkout');
+
+    // TOTAL ROOM COUNTS
+    const isCottage = roomTypeValue.toLowerCase().includes('cottage');
+
+    const totalRooms = isCottage ? 5 : 12;
+
+    // GET EXISTING BOOKINGS
+    const { data: existingBookings, error: bookingError } =
+        await supabaseClient
+            .from('bookings')
+            .select('*');
+
+    if (bookingError) {
+        alert('Failed to check availability.');
+        return;
+    }
+
+    // CHECK OVERLAPPING BOOKINGS
+    const overlappingBookings = existingBookings.filter(b => {
+
+        const sameType = isCottage
+            ? (b.room_type || '').toLowerCase().includes('cottage')
+            : !(b.room_type || '').toLowerCase().includes('cottage');
+
+        if (!sameType) return false;
+
+        const existingCheckIn = new Date(b.check_in);
+        const existingCheckOut = new Date(b.check_out);
+
+        const requestedCheckIn = new Date(checkInDate);
+        const requestedCheckOut = new Date(checkOutDate);
+
+        // DATE OVERLAP CHECK
+        return (
+            requestedCheckIn < existingCheckOut &&
+            requestedCheckOut > existingCheckIn
+        );
+    });
+
+    // FULLY BOOKED CHECK
+    if (overlappingBookings.length >= totalRooms) {
+
+        alert(
+            isCottage
+                ? 'All cottages are fully booked for the selected dates.'
+                : 'All private rooms are fully booked for the selected dates.'
+        );
+
+        return;
+    }
+
+    // BOOKING DATA
     const bookingData = {
         guest_name: document.getElementById('guest-name').value,
         email: document.getElementById('guest-email').value,
@@ -103,19 +164,21 @@
         city: document.getElementById('home-city').value,
         province: document.getElementById('home-province').value,
         room_type: roomTypeValue,
-        check_in: params.get('checkin'),
-        check_out: params.get('checkout'),
-        // This maps to your 'guests_count' column in Supabase
+        check_in: checkInDate,
+        check_out: checkOutDate,
         guests_count: parseInt(guestsValue, 10) || 0
     };
 
-    const { error } = await supabaseClient.from('bookings').insert([bookingData]);
+    // INSERT BOOKING
+    const { error } = await supabaseClient
+        .from('bookings')
+        .insert([bookingData]);
 
     if (error) {
         alert("Error: " + error.message);
     } else {
         alert("Booking Confirmed! See you at Cartagena.");
-        window.location.href = "index.html"; 
+        window.location.href = "index.html";
     }
 });
     </script>
